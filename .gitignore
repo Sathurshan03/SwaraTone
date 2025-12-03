@@ -1,0 +1,6 @@
+# Git ignored folders/files
+
+# Folders.
+build/**
+
+# Files.
