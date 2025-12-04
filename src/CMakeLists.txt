@@ -12,4 +12,5 @@ target_include_directories(${SourceExecutable} PUBLIC
 )
 
 # Add subdirectories (each adds sources/includes).
-# add_subdirectory(fft)
+add_subdirectory(fft)
+add_subdirectory(helper)
