@@ -2,15 +2,20 @@
 
 # Create and define executable.
 set(SourceExecutable "SwaraTone")
+set(SourceLib "SwaraToneLib")
+
 add_executable(${SourceExecutable}
     main.cpp
 )
+add_library(${SourceLib} STATIC)
 
 # Include directories.
-target_include_directories(${SourceExecutable} PUBLIC
+target_include_directories(${SourceLib} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # Add subdirectories (each adds sources/includes).
 add_subdirectory(fft)
 add_subdirectory(helper)
+
+target_link_libraries(${SourceExecutable} PUBLIC ${SourceLib})
