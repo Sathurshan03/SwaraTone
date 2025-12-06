@@ -11,7 +11,6 @@
 #include "frequencyDomain.h"
 #include "windowing_functions.h"
 
-
 int main() {
   std::cout << "Hello! I am Swara Tone!" << std::endl;
   std::cout << "We will need a lot of coffee for this fun project!"
@@ -32,5 +31,5 @@ int main() {
   // Run FFt on the input.
   frequencyDomain X;
   initFrequncyDomain(N, X);
-  runFFT16(x, N, X);
+  runFFT(x, N, X);
 }

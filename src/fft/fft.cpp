@@ -13,9 +13,9 @@
 #include "bit_reversal.h"
 #include "constants.h"
 
-void swapInput(double* x, uint16_t N, int numStages) {
-  for (uint16_t i = 0; i < N; i++) {
-    uint16_t reversedBits = bitReversal16(i) >> (16 - numStages);
+void swapInput(double* x, uint32_t N, int numStages) {
+  for (uint32_t i = 0; i < N; i++) {
+    uint32_t reversedBits = bitReversal32(i) >> (32 - numStages);
 
     if (reversedBits > i) {
       std::swap(x[i], x[reversedBits]);
@@ -23,9 +23,9 @@ void swapInput(double* x, uint16_t N, int numStages) {
   }
 }
 
-bool inline checkPower2(uint16_t num) { return check1BitSet(num); }
+bool inline checkPower2(uint32_t num) { return check1BitSet(num); }
 
-void runFFT16(double* x, uint16_t N, frequencyDomain& X) {
+void runFFT(double* x, uint32_t N, frequencyDomain& X) {
   if (!checkPower2(N)) {
     // TODO: add some logging or some error enum to return instead?
     return;
@@ -34,9 +34,9 @@ void runFFT16(double* x, uint16_t N, frequencyDomain& X) {
   int numStages = static_cast<int>(log2(N));
   swapInput(x, N, numStages);
 
-  X.frequency.resize(N);
+  std::vector<std::complex<double>> tempFreq(N);
   for (int i = 0; i < N; i++) {
-    X.frequency[i] = doubleComplex(x[i], 0.0);
+    tempFreq[i] = doubleComplex(x[i], 0.0);
   }
 
   // Run butterfly staging to compute fourier transform.
@@ -52,15 +52,20 @@ void runFFT16(double* x, uint16_t N, frequencyDomain& X) {
       for (int j = 0; j < half; j++) {
         int idx = k + j;
         int idxHalf = idx + half;
-        doubleComplex u = X.frequency[idx];
-        doubleComplex t = w * X.frequency[idxHalf];
-        X.frequency[idx] = u + t;
-        X.frequency[idxHalf] = u - t;
+        doubleComplex u = tempFreq[idx];
+        doubleComplex t = w * tempFreq[idxHalf];
+        tempFreq[idx] = u + t;
+        tempFreq[idxHalf] = u - t;
         w *= w_m;
       }
     }
   }
 
   // From Nyquist thereom, we can discard the last half elements as they repeat.
-  X.frequency.resize(X.numBins);
+  if (N / 2 != X.numBins) {
+    resizeFrequncyDomain(N / 2, X);
+  }
+
+  std::copy(tempFreq.begin(), tempFreq.begin() + X.numBins,
+            X.frequency.begin());
 }

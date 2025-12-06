@@ -20,7 +20,7 @@ struct frequencyDomain {
    * @brief The number of frequency bins being represented. That is the
    * difference of each bin will be max frequency / numbins.
    */
-  uint16_t numBins = 0;
+  uint32_t numBins = 0;
 };
 
 /**
@@ -29,4 +29,12 @@ struct frequencyDomain {
  * @param windowSize The size of the input window.
  * @param X Frequency domain struct to initialize.
  */
-void initFrequncyDomain(uint16_t windowSize, frequencyDomain& X);
+void initFrequncyDomain(uint32_t windowSize, frequencyDomain& X);
+
+/**
+ * @brief Resizes the frequency domain.
+ *
+ * @param newSize The new size.
+ * @param X Frequency domain struct whose components needs resizing.
+ */
+void resizeFrequncyDomain(uint32_t newSize, frequencyDomain& X);
