@@ -7,7 +7,12 @@
 
 #include "frequencyDomain.h"
 
-void initFrequncyDomain(uint16_t windowSize, frequencyDomain& X) {
-  X.numBins = windowSize / 2 + 1;
+void initFrequncyDomain(uint32_t windowSize, frequencyDomain& X) {
+  X.numBins = windowSize / 2;
+  X.frequency.resize(X.numBins);
+}
+
+void resizeFrequncyDomain(uint32_t newSize, frequencyDomain& X) {
+  X.numBins = newSize;
   X.frequency.resize(X.numBins);
 }
