@@ -4,17 +4,16 @@
  * @brief   main code.
  *******************************************************************************
  */
-#include <iostream>
 
 #include "constants.h"
 #include "fft.h"
 #include "frequencyDomain.h"
+#include "logging.h"
 #include "windowing_functions.h"
 
 int main() {
-  std::cout << "Hello! I am Swara Tone!" << std::endl;
-  std::cout << "We will need a lot of coffee for this fun project!"
-            << std::endl;
+  LOG_INFO("Hello! I am Swara Tone!");
+  LOG_INFO("We will need a lot of coffee for this fun project!");
 
   // Generate a sample input.
   const int N = 4096;

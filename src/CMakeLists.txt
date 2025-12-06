@@ -19,3 +19,4 @@ add_subdirectory(fft)
 add_subdirectory(helper)
 
 target_link_libraries(${SourceExecutable} PUBLIC ${SourceLib})
+add_compile_definitions(ENABLE_LOGGING)

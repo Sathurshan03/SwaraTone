@@ -8,6 +8,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 option(BUILD_TESTS "ON to build tests job." OFF)
+option(ENABLE_LOGGING "ON to log messages." ON)
 
 add_subdirectory(src)
 

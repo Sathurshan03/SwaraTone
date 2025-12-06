@@ -12,6 +12,7 @@
 #include "bit_property.h"
 #include "bit_reversal.h"
 #include "constants.h"
+#include "logging.h"
 
 void swapInput(double* x, uint32_t N, int numStages) {
   for (uint32_t i = 0; i < N; i++) {
@@ -27,7 +28,7 @@ bool inline checkPower2(uint32_t num) { return check1BitSet(num); }
 
 void runFFT(double* x, uint32_t N, frequencyDomain& X) {
   if (!checkPower2(N)) {
-    // TODO: add some logging or some error enum to return instead?
+    LOG_ERROR("N is not a power of 2. N = " << N);
     return;
   }
 
