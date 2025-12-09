@@ -4,10 +4,10 @@
  * @brief   WAV file encoding source code.
  ******************************************************************************
  */
+
 #include "wav_encoding.h"
 
 #include <algorithm>
-#include <fstream>
 
 #include "constants.h"
 #include "endian.h"
@@ -78,25 +78,20 @@ void WAVFileEncoder::writeToFile(std::string fileName, std::vector<double> pcm,
   memcpy(wavHeaderChar + offset, &wavHeader.dataChunkSize, 4);
   offset += 4;
 
-  wavFile.write(wavHeaderChar, sizeof(wavHeaderChar));
+  size_t wavHeaderSize = sizeof(wavHeaderChar);
+  this->flushBuffer(wavFile, wavHeaderChar, wavHeaderSize);
 
   // Stream audio data to WAV file.
-  // TODO: clean up and throw into their own functions.
-  if (bitsPerSample == 8) {
-    char buffer[1024];
-    size_t bufferSize = sizeof(buffer);
-    offset = 0;
+  this->clampPCM(pcm);
 
+  char buffer[1024];
+  size_t bufferSize = sizeof(buffer);
+  offset = 0;
+
+  if (bitsPerSample == 8) {
     for (double sample : pcm) {
       if (offset >= bufferSize) {
-        wavFile.write(buffer, offset);
-        offset = 0;
-      }
-
-      if (sample > 1.0) {
-        sample = 1.0;
-      } else if (sample < -1.0) {
-        sample = -1.0;
+        this->flushBuffer(wavFile, buffer, offset);
       }
 
       uint8_t pcmUInt = static_cast<uint8_t>(sample * INT8_MAX);
@@ -104,26 +99,58 @@ void WAVFileEncoder::writeToFile(std::string fileName, std::vector<double> pcm,
       offset += 1;
     }
 
-    // TODO: this flush can be its own function.
-    if (offset >= bufferSize) {
-      wavFile.write(buffer, offset);
-    }
+    this->flushBuffer(wavFile, buffer, offset);
   }
 
   else if (bitsPerSample == 16) {
-    // TODO: remember LE.
+    for (double sample : pcm) {
+      if (offset >= bufferSize) {
+        this->flushBuffer(wavFile, buffer, offset);
+      }
+
+      uint16_t pcmUInt = static_cast<uint16_t>(sample * INT16_MAX);
+      pcmUInt = convertToLE2B(pcmUInt);
+      memcpy(buffer + offset, &pcmUInt, 2);
+      offset += 2;
+    }
+
+    this->flushBuffer(wavFile, buffer, offset);
   }
 
   else if (bitsPerSample == 24) {
-    // TODO: remember LE.
-    // Lets skip this for now.
+    LOG_ERROR("24 bits per sample is currently not supported.");
   }
 
   else if (bitsPerSample == 32) {
-    // TODO: remember LE.
+    for (double sample : pcm) {
+      if (offset >= bufferSize) {
+        this->flushBuffer(wavFile, buffer, offset);
+      }
+
+      uint32_t pcmUInt = static_cast<uint32_t>(sample * INT32_MAX);
+      pcmUInt = convertToLE4B(pcmUInt);
+      memcpy(buffer + offset, &pcmUInt, 4);
+      offset += 4;
+    }
+
+    this->flushBuffer(wavFile, buffer, offset);
   }
 
   wavFile.close();
+}
+
+void WAVFileEncoder::clampPCM(std::vector<double>& pcm) {
+  for (double& data : pcm) {
+    data = std::clamp(data, -1.0, 1.0);
+  }
+}
+
+void WAVFileEncoder::flushBuffer(std::ofstream& file, char* buffer,
+                                 size_t& numBytesFlush) {
+  if (numBytesFlush > 0) {
+    file.write(buffer, numBytesFlush);
+    numBytesFlush = 0;
+  }
 }
 
 void WAVFileEncoder::prepareHeader(WavHeaderData& wavHeader, uint32_t dataSize,
@@ -133,16 +160,17 @@ void WAVFileEncoder::prepareHeader(WavHeaderData& wavHeader, uint32_t dataSize,
   // format.
 
   this->bytesPerSample = bitsPerSample / static_cast<uint16_t>(BYTE_SIZE);
-  uint16_t blockAlign = wavHeader.numChannels * bytesPerSample;
+  uint16_t numChannels = static_cast<uint16_t>(channel);
+  uint16_t blockAlign = numChannels * bytesPerSample;
   uint32_t dataChunkSize = dataSize * blockAlign;
 
   // Add 36 to include contents of WAV  header except for RIFF chunk desciption.
-  wavHeader.riffChunkSize = endianSwap4B(dataChunkSize + 36U);
-  wavHeader.dataChunkSize = endianSwap4B(dataChunkSize);
-  wavHeader.audioFormat = endianSwap2B(1U);
-  wavHeader.numChannels = endianSwap2B(static_cast<uint16_t>(channel));
-  wavHeader.sampleRate = endianSwap4B(sampleRate);
-  wavHeader.byteRate = endianSwap4B(sampleRate * wavHeader.blockAlign);
-  wavHeader.blockAlign = endianSwap2B(blockAlign);
-  wavHeader.bitsPerSample = endianSwap2B(bitsPerSample);
+  wavHeader.riffChunkSize = convertToLE4B(dataChunkSize + 36U);
+  wavHeader.dataChunkSize = convertToLE4B(dataChunkSize);
+  wavHeader.audioFormat = convertToLE2B(1U);
+  wavHeader.numChannels = convertToLE2B(numChannels);
+  wavHeader.sampleRate = convertToLE4B(sampleRate);
+  wavHeader.byteRate = convertToLE4B(sampleRate * wavHeader.blockAlign);
+  wavHeader.blockAlign = convertToLE2B(blockAlign);
+  wavHeader.bitsPerSample = convertToLE2B(bitsPerSample);
 }
