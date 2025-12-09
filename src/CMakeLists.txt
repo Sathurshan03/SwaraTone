@@ -17,7 +17,7 @@ target_include_directories(${SourceLib} PUBLIC
 # Add subdirectories (each adds sources/includes).
 add_subdirectory(fft)
 add_subdirectory(helper)
-add_subdirectory(mp3)
+add_subdirectory(audio_file)
 
 target_link_libraries(${SourceExecutable} PUBLIC ${SourceLib})
 add_compile_definitions(ENABLE_LOGGING)

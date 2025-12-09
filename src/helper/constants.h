@@ -12,3 +12,5 @@
 #include <cmath>
 
 const double PI = M_PI;
+
+const uint32_t BYTE_SIZE = 8;

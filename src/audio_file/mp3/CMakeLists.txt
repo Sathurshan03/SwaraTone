@@ -1,4 +1,4 @@
-# src/mp3 CMakeLists.txt
+# src/audio_file/mp3 CMakeLists.txt
 
 # Add source code to executable.
 target_sources(${SourceLib} PRIVATE

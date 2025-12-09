@@ -10,14 +10,9 @@
 #include <string>
 #include <vector>
 
+#include "channel.h"
 #include "minimp3.h"
 #include "minimp3_ex.h"
-
-/** @brief Classification of MP3 channels. */
-enum class Channel {
-  Mono = 1,
-  Stereo = 2,
-};
 
 struct MP3Data {
   /** @brief The number of sample of MP3 data. */
