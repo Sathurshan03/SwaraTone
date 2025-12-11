@@ -8,7 +8,7 @@
 #include "frequencyDomain.h"
 
 void initFrequncyDomain(uint32_t windowSize, frequencyDomain& X) {
-  X.numBins = windowSize / 2;
+  X.numBins = (windowSize / 2) + 1;
   X.frequency.resize(X.numBins);
 }
 

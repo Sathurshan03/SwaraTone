@@ -12,9 +12,14 @@
 #include <cmath>
 #include <cstdint>
 
-const double PI = M_PI;
+// Constants
+const uint16_t BITS_PER_SAMPLE = 16U;
 
-const uint32_t BYTE_SIZE = 8;
+const uint32_t BYTE_SIZE = 8U;
+
+const uint32_t SAMPLE_RATE = 44100U;
+
+const double PI = M_PI;
 
 // Host device endian detection.
 #if defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
