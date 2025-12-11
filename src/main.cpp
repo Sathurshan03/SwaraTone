@@ -16,14 +16,14 @@ int main() {
   LOG_INFO("We will need a lot of coffee for this fun project!");
 
   // Generate a sample input.
-  const int N = 4096;
+  const int N = 44100;
   const double freq = 55.0;
   const double Fs = N;
-  double x[N];
+  double x[44100];
 
   // Generate a cosine wave.
   for (int n = 0; n < N; n++) {
-    x[n] = std::cos(2.0 * PI * freq * n / Fs);
+    x[n] = std::cos(PI * freq * n / Fs);
   }
   applyHanningWindow(x, N);
 

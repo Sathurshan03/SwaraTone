@@ -1,9 +1,8 @@
-# src/helper/bit CMakeLists.txt
+# src/audio_file/mp3 CMakeLists.txt
 
 # Add source code to executable.
 target_sources(${SourceLib} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/bit_reversal.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/endian.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mp3.cpp
 )
 
 # Include directories.

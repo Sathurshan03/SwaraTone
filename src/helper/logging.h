@@ -8,6 +8,7 @@
 #pragma once
 #include <string.h>
 
+#include <sstream>
 #include <string>
 
 namespace LogInternal {
