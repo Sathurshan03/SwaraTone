@@ -13,7 +13,7 @@
         {
             "label": "Build with MinGW Compiler",
             "type": "shell",
-            "command": "cmake -G 'MinGW Makefiles' -B build",
+            "command": "cmake -G 'MinGW Makefiles' -B build -DBUILD_TESTS=ON",
             "detail": "Configures the project using MinGW compiler, setting up all toolchains, options, and build files.",
             "presentation": {
                 "reveal": "always"

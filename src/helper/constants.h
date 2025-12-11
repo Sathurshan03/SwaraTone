@@ -9,8 +9,10 @@
 
 #define _USE_MATH_DEFINES
 
-#include <cmath>
+#include <math.h>
+
 #include <cstdint>
+
 
 // Constants
 const uint16_t BITS_PER_SAMPLE = 16U;
