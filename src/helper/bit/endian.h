@@ -9,6 +9,10 @@
 
 #include <cstdint>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * @brief Swaps endian for 2 bytes. Big endian -> little endian or vice versa.
  *
@@ -40,3 +44,7 @@ uint16_t convertToLE2B(uint16_t in);
  * @return uint16_t Little endian representation of the input.
  */
 uint32_t convertToLE4B(uint32_t in);
+
+#ifdef __cplusplus
+}
+#endif

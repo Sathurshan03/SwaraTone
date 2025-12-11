@@ -21,7 +21,7 @@ jobs:
       run: cmake -B build -S . -G Ninja -DBUILD_TESTS=ON
 
     - name: Build
-      run: cmake --build build
+      run: cmake --build build --clean-first
 
     - name: Run Tests
       run: cd build/test && ./SwaraToneTests

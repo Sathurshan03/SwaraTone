@@ -7,24 +7,10 @@
 
 #include "fft.h"
 
-#include <math.h>
-
-#include "bit_property.h"
-#include "bit_reversal.h"
 #include "constants.h"
+#include "fft_helper.hpp"
 #include "logging.h"
-
-void swapInput(double* x, uint32_t N, int numStages) {
-  for (uint32_t i = 0; i < N; i++) {
-    uint32_t reversedBits = bitReversal32(i) >> (32 - numStages);
-
-    if (reversedBits > i) {
-      std::swap(x[i], x[reversedBits]);
-    }
-  }
-}
-
-bool inline checkPower2(uint32_t num) { return check1BitSet(num); }
+#include "powers.h"
 
 void runFFT(double* x, uint32_t N, frequencyDomain& X) {
   if (!checkPower2(N)) {
@@ -32,13 +18,14 @@ void runFFT(double* x, uint32_t N, frequencyDomain& X) {
     return;
   }
 
-  int numStages = static_cast<int>(log2(N));
-  swapInput(x, N, numStages);
-
-  std::vector<std::complex<double>> tempFreq(N);
+  // Run radix sort.
+  std::vector<doubleComplex> tempFreq(N);
   for (int i = 0; i < N; i++) {
     tempFreq[i] = doubleComplex(x[i], 0.0);
   }
+
+  int numStages = static_cast<int>(log2(N));
+  swapInput(tempFreq.data(), N, numStages);
 
   // Run butterfly staging to compute fourier transform.
   for (int s = 1; s <= numStages; s++) {
@@ -63,8 +50,8 @@ void runFFT(double* x, uint32_t N, frequencyDomain& X) {
   }
 
   // From Nyquist thereom, we can discard the last half elements as they repeat.
-  if (N / 2 != X.numBins) {
-    resizeFrequncyDomain(N / 2, X);
+  if (getNyquistSize(N) != X.numBins) {
+    resizeFrequncyDomain(getNyquistSize(N), X);
   }
 
   std::copy(tempFreq.begin(), tempFreq.begin() + X.numBins,

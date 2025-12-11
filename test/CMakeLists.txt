@@ -34,3 +34,5 @@ target_link_libraries(${TestExecutable} PRIVATE
 
 # Register tests with CTest
 include(GoogleTest)
+
+add_compile_definitions(ENABLE_LOGGING)
