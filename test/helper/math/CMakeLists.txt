@@ -1,12 +1,8 @@
-# test/helper CMakeLists.txt
-
-# Add subdirectories (each adds sources/includes).
-add_subdirectory(bit)
-add_subdirectory(math)
+# test/helper/math CMakeLists.txt
 
 # Define test executable files.
 target_sources(${TestExecutable} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_helper.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/stats_median_test.cpp
 )
 
 # Add include directories.
