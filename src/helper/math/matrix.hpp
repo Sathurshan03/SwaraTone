@@ -60,6 +60,49 @@ class Matrix {
   inline T& operator()(size_t i, size_t j) { return data[i * cols + j]; }
 
   /**
+   * @brief Single cell access.
+   *
+   * @param[in] i row number.
+   * @param[in] j column number.
+   * @return T& value at cell (i, j).
+   */
+  inline const T& operator()(size_t i, size_t j) const {
+    return data[i * cols + j];
+  }
+
+  /**
+   * @brief Matrix element-wise addition. A += B
+   *
+   * @param b matrix to add with B.
+   * @return Matrix<T>& Result A.
+   */
+  Matrix<T>& operator+=(const Matrix<T>& b) {
+    assert(this->size() == b.size() &&
+           "Matrix elementwise addition have incorrect dimensions.");
+
+    for (size_t i = 0; i < data.size(); i++) {
+      data[i] += b.data[i];
+    }
+    return *this;
+  }
+
+  /**
+   * @brief Matrix element-wise multiplication. A *= B
+   *
+   * @param b multiplier matrix B.
+   * @return Matrix<T>& Result A.
+   */
+  Matrix<T>& operator*=(const Matrix<T>& b) {
+    assert(this->size() == b.size() &&
+           "Matrix elementwise multiplication have incorrect dimensions.");
+
+    for (size_t i = 0; i < data.size(); i++) {
+      data[i] *= b.data[i];
+    }
+    return *this;
+  }
+
+  /**
    * @brief Returns the size of the matrix.
    *
    * @return std::pair<size_t, size_t> Pair where first item is number of rows
@@ -68,20 +111,6 @@ class Matrix {
   inline std::pair<size_t, size_t> size() const {
     return std::make_pair(rows, cols);
   }
-
-  /**
-   * @brief Return the number of rows in the matrix.
-   *
-   * @return size_t The number of rows.
-   */
-  inline size_t getNumRows() const { return rows; }
-
-  /**
-   * @brief Return the number of columns in the matrix.
-   *
-   * @return size_t The number of columns.
-   */
-  inline size_t getNumCols() const { return cols; }
 
   /**
    * @brief Resizes the matrix.
@@ -98,15 +127,18 @@ class Matrix {
   }
 
   /**
-   * @brief Single cell access.
+   * @brief Return the number of rows in the matrix.
    *
-   * @param[in] i row number.
-   * @param[in] j column number.
-   * @return T& value at cell (i, j).
+   * @return size_t The number of rows.
    */
-  inline const T& operator()(size_t i, size_t j) const {
-    return data[i * cols + j];
-  }
+  inline size_t getNumRows() const { return rows; }
+
+  /**
+   * @brief Return the number of columns in the matrix.
+   *
+   * @return size_t The number of columns.
+   */
+  inline size_t getNumCols() const { return cols; }
 
   /**
    * @brief Get a copy of the entire row.
@@ -149,3 +181,29 @@ class Matrix {
   /** @brief Matrix data. Data is stored linearly. Cell (i, j) = i * cols + j */
   std::vector<T> data{};
 };
+
+/**
+ * @brief Matrix element-wise addition. A = C * B
+ *
+ * @param c original matrix C.
+ * @param b matrix to add with B.
+ * @return Matrix<T>& Result A.
+ */
+template <typename T>
+Matrix<T> operator+(Matrix<T> c, const Matrix<T>& b) {
+  c += b;
+  return c;
+}
+
+/**
+ * @brief Matrix element-wise multiplication. A = C * B
+ *
+ * @param c original matrix C.
+ * @param b multiplier matrix B.
+ * @return Matrix<T>& Result A.
+ */
+template <typename T>
+Matrix<T> operator*(Matrix<T> c, const Matrix<T>& b) {
+  c *= b;
+  return c;
+}
