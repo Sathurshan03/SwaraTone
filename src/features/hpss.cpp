@@ -7,23 +7,55 @@
 
 #include "hpss.h"
 
+#include "constants.h"
+#include "fft.h"
+#include "fft_helper.hpp"
+#include "frequencyDomain.h"
 #include "logging.h"
+#include "matrix.hpp"
+#include "powers.hpp"
+#include "windowing_functions.h"
 
-void runHPSS(const std::vector<double>& in, std::vector<double>& harmonics,
+void runHPSS(std::vector<double>& in, std::vector<double>& harmonics,
              std::vector<double>& percussive) {
   LOG_INFO("Running HPSS.");
 
   // Clean up vector sizes.
+  if (harmonics.size() != in.size()) {
+    harmonics.resize(in.size());
+  }
+
+  if (percussive.size() != in.size()) {
+    percussive.resize(in.size());
+  }
+
+  // Initialize power spectrum matrix. Subtract 1 from column size to avoid
+  // partially filled window.
+  size_t r = getNyquistSize(WINDOW_SIZE);
+  size_t c = (in.size() / HALF_WINDOW_SIZE) - 1;
+  Matrix powerSpectrumTs{r, c};
 
   // 1. Compute FFT on input signal.
+  LOG_INFO("Computing FFT on input signal");
+  frequencyDomain X;
+  initFrequncyDomain(WINDOW_SIZE, X);
+  std::vector<double> powerSpectrum(WINDOW_SIZE);
 
-  // Apply window.
+  for (size_t i = 0; i < c; i++) {
+    double* x = in.data() + i * HALF_WINDOW_SIZE;
 
-  // 2. Apply power spectrum.
+    applyHanningWindow(x, WINDOW_SIZE);
+    runFFT(x, WINDOW_SIZE, X);
 
-  // 3. Apply median filtering.
+    // Create power spectrum.
+    for (size_t j = 0; j < r; j++) {
+      powerSpectrumTs(j, i) = std::norm(X.frequency[j]);
+    }
+  }
 
-  // 4. Apply mask.
+  // 2. Apply median filtering.
 
-  // 5. Get final components.
+  // 3. Apply mask.
+
+  // 4. Get final components.
 }

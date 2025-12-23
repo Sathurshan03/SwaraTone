@@ -16,5 +16,5 @@
  * @param[in,out] harmonics Harmonic component of input signal.
  * @param[in,out] percussive Percussive component of input signal.
  */
-void runHPSS(const std::vector<double>& in, std::vector<double>& harmonics,
+void runHPSS(std::vector<double>& in, std::vector<double>& harmonics,
              std::vector<double>& percussive);

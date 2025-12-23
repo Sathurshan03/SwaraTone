@@ -13,13 +13,16 @@
 
 #include <cstdint>
 
-
 // Constants
 const uint16_t BITS_PER_SAMPLE = 16U;
 
 const uint32_t BYTE_SIZE = 8U;
 
 const uint32_t SAMPLE_RATE = 44100U;
+
+const uint32_t WINDOW_SIZE = 4096U;
+
+const uint32_t HALF_WINDOW_SIZE = WINDOW_SIZE / 2;
 
 const double PI = M_PI;
 
