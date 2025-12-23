@@ -25,6 +25,7 @@ add_dependencies(${TestExecutable} SwaraToneLib)
 # Add subdirectories (each adds sources/includes).
 add_subdirectory(fft)
 add_subdirectory(helper)
+add_subdirectory(mask)
 
 # Link test executable against your library + gtest
 target_link_libraries(${TestExecutable} PRIVATE
