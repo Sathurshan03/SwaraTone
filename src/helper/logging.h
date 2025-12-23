@@ -15,10 +15,10 @@ namespace LogInternal {
 /**
  * @brief Generic log function to io stream.
  *
- * @param level Logging level.
- * @param file File that is sending the log message.
- * @param line Line of the file that is sending the log message.
- * @param msg The message to log.
+ * @param[in] level Logging level.
+ * @param[in] file File that is sending the log message.
+ * @param[in] line Line of the file that is sending the log message.
+ * @param[in] msg The message to log.
  */
 void log(const char* level, const char* file, int line, const std::string& msg);
 

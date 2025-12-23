@@ -1,8 +1,8 @@
-# src/helper/math CMakeLists.txt
+# src/features CMakeLists.txt
 
 # Add source code to executable.
 target_sources(${SourceLib} PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/matrix.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/hpss.cpp
 )
 
 # Include directories.
