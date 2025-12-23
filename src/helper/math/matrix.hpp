@@ -12,6 +12,9 @@
 /** @brief Matrix class. */
 class Matrix {
  public:
+  /**  @brief Construct a new Matrix object. */
+  Matrix();
+
   /**
    * @brief Construct a new Matrix object.
    *

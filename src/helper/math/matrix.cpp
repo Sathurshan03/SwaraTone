@@ -11,6 +11,12 @@
 
 #include "logging.h"
 
+Matrix::Matrix() {
+  rows = 1;
+  cols = 1;
+  data.resize(1);
+}
+
 Matrix::Matrix(size_t rows, size_t cols) : rows(rows), cols(cols) {
   data.resize(rows * cols, 0.0);
 }
@@ -26,9 +32,11 @@ Matrix::Matrix(size_t rows, size_t cols, std::vector<double> data)
 }
 
 void Matrix::resize(std::pair<size_t, size_t> newSize) {
-  rows = newSize.first;
-  cols = newSize.second;
-  data.resize(rows * cols);
+  if (rows != newSize.first || cols != newSize.second) {
+    rows = newSize.first;
+    cols = newSize.second;
+    data.resize(rows * cols);
+  }
 }
 
 std::vector<double> Matrix::getRow(size_t r) const {

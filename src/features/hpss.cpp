@@ -11,29 +11,20 @@
 #include "fft.h"
 #include "fft_helper.hpp"
 #include "frequencyDomain.h"
+#include "hpssMask.hpp"
 #include "logging.h"
-#include "matrix.hpp"
 #include "powers.hpp"
 #include "stats.h"
 #include "windowing_functions.h"
+
 
 static const size_t MEDIAN_FILTER_SIZE = 5;
 static const size_t MEDIAN_OFFSET = (MEDIAN_FILTER_SIZE - 1) / 2;
 
 // TODO: we should throw each step into its own function.
 
-void runHPSS(std::vector<double>& in, std::vector<double>& harmonics,
-             std::vector<double>& percussive) {
+void runHPSS(std::vector<double>& in, Matrix& mH, Matrix& mP) {
   LOG_INFO("Running HPSS.");
-
-  // Clean up vector sizes.
-  if (harmonics.size() != in.size()) {
-    harmonics.resize(in.size());
-  }
-
-  if (percussive.size() != in.size()) {
-    percussive.resize(in.size());
-  }
 
   // Initialize power spectrum matrix. Subtract 1 from number windows to avoid
   // partially filled window.
@@ -43,7 +34,7 @@ void runHPSS(std::vector<double>& in, std::vector<double>& harmonics,
   const size_t c = numWindows;
   Matrix powerSpectrumTs{r, c};
 
-  // 1. Compute FFT on input signal.
+  // 1. Compute FFT on input signal to create a power spectrum.
   LOG_INFO("Computing FFT on input signal");
   frequencyDomain X;
   initFrequncyDomain(WINDOW_SIZE, X);
@@ -95,6 +86,11 @@ void runHPSS(std::vector<double>& in, std::vector<double>& harmonics,
   }
 
   // 3. Apply mask.
+  LOG_INFO("Applying filter mask.");
+  std::pair<double, double> maskSize = std::make_pair(r, c);
+  mH.resize(maskSize);
+  mP.resize(maskSize);
+  applySoftMask(yH, yP, mH, mP);
 
-  // 4. Get final components.
+  LOG_INFO("Finished running HPSS.");
 }
