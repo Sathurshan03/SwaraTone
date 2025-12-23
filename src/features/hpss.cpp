@@ -8,84 +8,54 @@
 #include "hpss.h"
 
 #include "constants.h"
-#include "fft.h"
-#include "fft_helper.hpp"
-#include "frequencyDomain.h"
 #include "hpssMask.hpp"
 #include "logging.h"
-#include "powers.hpp"
 #include "stats.h"
-#include "windowing_functions.hpp"
 
 static const size_t MEDIAN_FILTER_SIZE = 5;
 static const size_t MEDIAN_OFFSET = (MEDIAN_FILTER_SIZE - 1) / 2;
 
-void runHPSS(std::vector<double>& in, Matrix<double>& mH, Matrix<double>& mP) {
+std::pair<ComplexMatrix, ComplexMatrix> runHPSS(ComplexMatrix& complexSpectrum,
+                                                Matrix<double>& powerSpectrum,
+                                                bool softMask) {
   LOG_INFO("Running HPSS.");
 
-  // Initialize power spectrum matrix. Subtract 1 from number windows to avoid
-  // partially filled window.
-  const size_t numFreqBins = getNyquistSize(WINDOW_SIZE);
-  const size_t numWindows = (in.size() / HALF_WINDOW_SIZE) - 1;
-  const size_t r = numFreqBins;
-  const size_t c = numWindows;
-
-  Matrix<std::complex<double>> stftX{r, c};
-  Matrix<double> powerSpectrumTs{r, c};
-
-  // 1. Compute FFT on input signal to create a power spectrum.
-  LOG_INFO("Computing FFT on input signal");
-  createPowerSpectrumTs(in, stftX, powerSpectrumTs);
-
-  // 2. Apply median filtering.
+  // 1. Apply median filtering.
   LOG_INFO("Applying median filtering.");
+  const size_t r = powerSpectrum.getNumRows();
+  const size_t c = powerSpectrum.getNumCols();
+
   Matrix<double> yH{r, c};
   Matrix<double> yP{r, c};
-  runMedianFiltering(powerSpectrumTs, yH, yP);
+  runMedianFiltering(powerSpectrum, yH, yP);
 
-  // 3. Create mask.
+  // 2. Create mask.
   LOG_INFO("Applying filter mask.");
-  std::pair<double, double> maskSize = std::make_pair(r, c);
-  mH.resize(maskSize);
-  mP.resize(maskSize);
-  applySoftMask(yH, yP, mH, mP);
+  Matrix<double> mH{r, c};
+  Matrix<double> mP{r, c};
 
-  // 4. Apply mask.
+  if (softMask) {
+    applySoftMask(yH, yP, mH, mP);
+  } else {
+    applyBinaryMask(yH, yP, mH, mP);
+  }
+
+  // 3. Apply mask to complex spectrum.
+  ComplexMatrix hComplexSpectrum = complexSpectrum * mH;
+  ComplexMatrix pComplexSpectrum = complexSpectrum * mP;
 
   LOG_INFO("Finished running HPSS.");
+  return std::make_pair(hComplexSpectrum, pComplexSpectrum);
 }
 
-void createPowerSpectrumTs(std::vector<double>& in,
-                           Matrix<std::complex<double>>& stftX,
-                           Matrix<double>& powerSpectrumTs) {
-  const size_t r = powerSpectrumTs.getNumRows();
-  const size_t c = powerSpectrumTs.getNumCols();
-
-  frequencyDomain X;
-  initFrequncyDomain(WINDOW_SIZE, X);
-
-  for (size_t i = 0; i < c; i++) {
-    double* x = in.data() + i * HALF_WINDOW_SIZE;
-
-    applyHanningWindow(x, WINDOW_SIZE);
-    runFFT(x, WINDOW_SIZE, X);
-
-    // Create power spectrum.
-    for (size_t j = 0; j < r; j++) {
-      stftX(j, i) = X.frequency[j];
-      powerSpectrumTs(j, i) = std::norm(X.frequency[j]);
-    }
-  }
-}
-
-void runMedianFiltering(Matrix<double>& powerSpectrumTs, Matrix<double>& yH,
+void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
                         Matrix<double>& yP) {
-  const size_t r = powerSpectrumTs.getNumRows();
-  const size_t c = powerSpectrumTs.getNumCols();
+  const size_t r = powerSpectrum.getNumRows();
+  const size_t c = powerSpectrum.getNumCols();
 
   // Rows: Harmonics
   for (size_t i = 0; i < r; i++) {
-    std::vector<double> rowData = powerSpectrumTs.getRow(i);
+    std::vector<double> rowData = powerSpectrum.getRow(i);
 
     auto first = rowData.begin();
     auto last = rowData.begin() + MEDIAN_FILTER_SIZE;
@@ -99,7 +69,7 @@ void runMedianFiltering(Matrix<double>& powerSpectrumTs, Matrix<double>& yH,
 
   // Cols: Percussion
   for (size_t i = 0; i < c; i++) {
-    std::vector<double> colData = powerSpectrumTs.getCol(i);
+    std::vector<double> colData = powerSpectrum.getCol(i);
 
     auto first = colData.begin();
     auto last = colData.begin() + MEDIAN_FILTER_SIZE;

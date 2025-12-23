@@ -107,7 +107,7 @@ MP3Data handleStereoChannel(mp3dec_file_info_t& info) {
         static_cast<double>(info.buffer[2 * i + 1]) / INT16_MAX;
   }
 
-  MP3Data data = {info.samples, Channel::Stereo, normalizedLeftPcm,
+  MP3Data data = {numSamples, Channel::Stereo, normalizedLeftPcm,
                   normalizedRightPcm};
   return data;
 }
