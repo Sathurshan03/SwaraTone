@@ -26,15 +26,15 @@ struct frequencyDomain {
 /**
  * @brief Initializes the frequency domain struct.
  *
- * @param windowSize The size of the input window.
- * @param X Frequency domain struct to initialize.
+ * @param[in] windowSize The size of the input window.
+ * @param[out] X Frequency domain struct to initialize.
  */
 void initFrequncyDomain(uint32_t windowSize, frequencyDomain& X);
 
 /**
  * @brief Resizes the frequency domain.
  *
- * @param newSize The new size.
- * @param X Frequency domain struct whose components needs resizing.
+ * @param[in] newSize The new size.
+ * @param[out] X Frequency domain struct whose components needs resizing.
  */
 void resizeFrequncyDomain(uint32_t newSize, frequencyDomain& X);

@@ -10,6 +10,13 @@
 #include <algorithm>
 #include <vector>
 
+/**
+ * @brief Computes the median from a list.
+ *
+ * @tparam T Type of vector.
+ * @param[in] vec Vector to compute the median on.
+ * @return T The median in the list.
+ */
 template <typename T>
 T median(std::vector<T>& vec) {
   std::vector<T> cpyVec(vec);

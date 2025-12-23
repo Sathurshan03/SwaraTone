@@ -12,31 +12,31 @@
 /** @brief Matrix class. */
 class Matrix {
  public:
-  /**  @brief Construct a new Matrix object. */
+  /** @brief Construct a new Matrix object. */
   Matrix();
 
   /**
    * @brief Construct a new Matrix object.
    *
-   * @param rows The number of rows.
-   * @param cols The number of columns.
+   * @param[in] rows The number of rows.
+   * @param[in] cols The number of columns.
    */
   Matrix(size_t rows, size_t cols);
 
   /**
    * @brief Construct a new Matrix object.
    *
-   * @param rows The number of rows.
-   * @param cols The number of columns.
-   * @param data Data to initialize matrix to.
+   * @param[in] rows The number of rows.
+   * @param[in] cols The number of columns.
+   * @param[in] data Data to initialize matrix to.
    */
   Matrix(size_t rows, size_t cols, std::vector<double> data);
 
   /**
    * @brief Single cell access.
    *
-   * @param i row number.
-   * @param j column number.
+   * @param[in] i row number.
+   * @param[in] j column number.
    * @return double& value at cell (i, j).
    */
   inline double& operator()(size_t i, size_t j) { return data[i * cols + j]; }
@@ -68,16 +68,16 @@ class Matrix {
   /**
    * @brief Resizes the matrix.
    *
-   * @param newSize Pair where the first item is number of rows and second item
-   * is number of columns.
+   * @param[in] newSize Pair where the first item is number of rows and second
+   * item is number of columns.
    */
   void resize(std::pair<size_t, size_t> newSize);
 
   /**
    * @brief Single cell access.
    *
-   * @param i row number.
-   * @param j column number.
+   * @param[in] i row number.
+   * @param[in] j column number.
    * @return double& value at cell (i, j).
    */
   inline const double& operator()(size_t i, size_t j) const {
@@ -87,7 +87,7 @@ class Matrix {
   /**
    * @brief Get a copy of the entire row.
    *
-   * @param row Row number.
+   * @param[in] row Row number.
    * @return std::vector<double> Row content.
    */
   std::vector<double> getRow(size_t row) const;
@@ -95,7 +95,7 @@ class Matrix {
   /**
    * @brief Get a copy of the entire column.
    *
-   * @param col Column number.
+   * @param[in] col Column number.
    * @return std::vector<double> Column content.
    */
   std::vector<double> getCol(size_t col);

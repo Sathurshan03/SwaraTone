@@ -15,9 +15,9 @@
  * @brief Swaps the ordering of input for radix-2 algo.
  *
  * @param[in,out] x Input signal.
- * @param N Size of input signal.
- * @param numStages The number of stages in radix-2 algo. This is equivalent to
- * log2(N).
+ * @param[in] N Size of input signal.
+ * @param[in] numStages The number of stages in radix-2 algo. This is equivalent
+ * to log2(N).
  */
 template <typename T>
 void swapInput(T* x, uint32_t N, int numStages) {
@@ -33,7 +33,7 @@ void swapInput(T* x, uint32_t N, int numStages) {
 /**
  * @brief Get the size of array when using Nyquist theory
  *
- * @param N Size of original array.
+ * @param[in] N Size of original array.
  * @return uint32_t New array size.
  */
 inline uint32_t getNyquistSize(uint32_t N) { return (N / 2) + 1; }

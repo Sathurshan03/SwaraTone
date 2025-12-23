@@ -15,10 +15,10 @@ static const double epsilonHalf = epsilon / 2.0;
 /**
  * @brief Applies binary mask.
  *
- * @param yH Harmonic median estimate.
- * @param yP Percussive median estimate.
- * @param[in,out] mH Binary mask for harmonic component.
- * @param[in,out] mP Binary mask for percussive component.
+ * @param[in] yH Harmonic median estimate.
+ * @param[in] yP Percussive median estimate.
+ * @param[out] mH Binary mask for harmonic component.
+ * @param[out] mP Binary mask for percussive component.
  */
 inline void binaryMask(const double yH, const double yP, double& mH,
                        double& mP) {
@@ -34,10 +34,10 @@ inline void binaryMask(const double yH, const double yP, double& mH,
 /**
  * @brief Applies soft mask.
  *
- * @param yH Harmonic median estimate.
- * @param yP Percussive median estimate.
- * @param[in,out] mH Soft mask for harmonic component.
- * @param[in,out] mP Soft mask for percussive component.
+ * @param[in] yH Harmonic median estimate.
+ * @param[in] yP Percussive median estimate.
+ * @param[out] mH Soft mask for harmonic component.
+ * @param[out] mP Soft mask for percussive component.
  */
 inline void softMask(const double yH, const double yP, double& mH, double& mP) {
   double denominator = yH + yP + epsilon;
@@ -53,8 +53,8 @@ inline void softMask(const double yH, const double yP, double& mH, double& mP) {
  *
  * @param[in] yH Harmonic median estimates.
  * @param[in] yP Percussive median estimates.
- * @param[in,out] mH Binary mask for harmonic components.
- * @param[in,out] mP Binary mask for percussive components.
+ * @param[out] mH Binary mask for harmonic components.
+ * @param[out] mP Binary mask for percussive components.
  */
 void applyBinaryMask(const Matrix& yH, const Matrix& yP, Matrix& mH,
                      Matrix& mP);
@@ -67,7 +67,7 @@ void applyBinaryMask(const Matrix& yH, const Matrix& yP, Matrix& mH,
  *
  * @param[in] yH Harmonic median estimates.
  * @param[in] yP Percussive median estimates.
- * @param[in,out] mH Soft mask for harmonic components.
- * @param[in,out] mP Soft mask for percussive components.
+ * @param[out] mH Soft mask for harmonic components.
+ * @param[out] mP Soft mask for percussive components.
  */
 void applySoftMask(const Matrix& yH, const Matrix& yP, Matrix& mH, Matrix& mP);

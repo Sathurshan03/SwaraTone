@@ -10,7 +10,7 @@
 /**
  * @brief Checks whether only one bit is set in the input.
  *
- * @param num Input number.
+ * @param[in] num Input number.
  * @return true when only one bit is set in the input, otherwise false.
  */
 inline bool check1BitSet(unsigned int num) {
