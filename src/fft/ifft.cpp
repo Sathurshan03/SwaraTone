@@ -10,7 +10,7 @@
 #include "constants.h"
 #include "fft_helper.hpp"
 #include "logging.h"
-#include "powers.h"
+#include "powers.hpp"
 
 void runIFFT(std::vector<doubleComplex>& X, uint32_t N,
              std::vector<doubleComplex>& x, bool nyquistApplied) {

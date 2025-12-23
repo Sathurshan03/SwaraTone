@@ -10,7 +10,7 @@
 #include "constants.h"
 #include "fft_helper.hpp"
 #include "logging.h"
-#include "powers.h"
+#include "powers.hpp"
 
 void runFFT(double* x, uint32_t N, frequencyDomain& X) {
   if (!checkPower2(N)) {
