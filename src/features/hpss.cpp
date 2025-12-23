@@ -14,7 +14,13 @@
 #include "logging.h"
 #include "matrix.hpp"
 #include "powers.hpp"
+#include "stats.h"
 #include "windowing_functions.h"
+
+static const size_t MEDIAN_FILTER_SIZE = 5;
+static const size_t MEDIAN_OFFSET = (MEDIAN_FILTER_SIZE - 1) / 2;
+
+// TODO: we should throw each step into its own function.
 
 void runHPSS(std::vector<double>& in, std::vector<double>& harmonics,
              std::vector<double>& percussive) {
@@ -29,10 +35,12 @@ void runHPSS(std::vector<double>& in, std::vector<double>& harmonics,
     percussive.resize(in.size());
   }
 
-  // Initialize power spectrum matrix. Subtract 1 from column size to avoid
+  // Initialize power spectrum matrix. Subtract 1 from number windows to avoid
   // partially filled window.
-  size_t r = getNyquistSize(WINDOW_SIZE);
-  size_t c = (in.size() / HALF_WINDOW_SIZE) - 1;
+  const size_t numFreqBins = getNyquistSize(WINDOW_SIZE);
+  const size_t numWindows = (in.size() / HALF_WINDOW_SIZE) - 1;
+  const size_t r = numFreqBins;
+  const size_t c = numWindows;
   Matrix powerSpectrumTs{r, c};
 
   // 1. Compute FFT on input signal.
@@ -54,6 +62,37 @@ void runHPSS(std::vector<double>& in, std::vector<double>& harmonics,
   }
 
   // 2. Apply median filtering.
+  LOG_INFO("Applying median filtering.");
+  Matrix yH{r, c};
+  Matrix yP{r, c};
+
+  // Rows: Harmonics
+  for (size_t i = 0; i < r; i++) {
+    std::vector<double> rowData = powerSpectrumTs.getRow(i);
+
+    auto first = rowData.begin();
+    auto last = rowData.begin() + MEDIAN_FILTER_SIZE;
+    for (size_t j = MEDIAN_OFFSET; j < c - MEDIAN_OFFSET; j++) {
+      std::vector<double> vec(first, last);
+      yH(i, j) = median(vec);
+      first++;
+      last++;
+    }
+  }
+
+  // Cols: Percussion
+  for (size_t i = 0; i < c; i++) {
+    std::vector<double> colData = powerSpectrumTs.getCol(i);
+
+    auto first = colData.begin();
+    auto last = colData.begin() + MEDIAN_FILTER_SIZE;
+    for (size_t j = MEDIAN_OFFSET; j < c - MEDIAN_OFFSET; j++) {
+      std::vector<double> vec(first, last);
+      yH(i, j) = median(vec);
+      first++;
+      last++;
+    }
+  }
 
   // 3. Apply mask.
 
