@@ -5,7 +5,7 @@
  *******************************************************************************
  */
 
-#include "windowing_functions.h"
+#include "windowing_functions.hpp"
 
 #include "constants.h"
 

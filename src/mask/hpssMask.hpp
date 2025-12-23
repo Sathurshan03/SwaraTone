@@ -56,8 +56,8 @@ inline void softMask(const double yH, const double yP, double& mH, double& mP) {
  * @param[out] mH Binary mask for harmonic components.
  * @param[out] mP Binary mask for percussive components.
  */
-void applyBinaryMask(const Matrix& yH, const Matrix& yP, Matrix& mH,
-                     Matrix& mP);
+void applyBinaryMask(const Matrix<double>& yH, const Matrix<double>& yP,
+                     Matrix<double>& mH, Matrix<double>& mP);
 
 /**
  * @brief Applies a soft mask to separate harmonic and percussive components.
@@ -70,4 +70,5 @@ void applyBinaryMask(const Matrix& yH, const Matrix& yP, Matrix& mH,
  * @param[out] mH Soft mask for harmonic components.
  * @param[out] mP Soft mask for percussive components.
  */
-void applySoftMask(const Matrix& yH, const Matrix& yP, Matrix& mH, Matrix& mP);
+void applySoftMask(const Matrix<double>& yH, const Matrix<double>& yP,
+                   Matrix<double>& mH, Matrix<double>& mP);

@@ -16,7 +16,7 @@ TEST(Matrix, Dimension) {
   // Initialize a matrix.
   size_t r = 9;
   size_t c = 3;
-  Matrix m{r, c};
+  Matrix<double> m{r, c};
 
   // Assert that matrix dimension is as same as initialization.
   ASSERT_EQ(m.getNumRows(), r);
@@ -31,7 +31,7 @@ TEST(Matrix, Resizing) {
   // Initialize a matrix.
   size_t r = 9;
   size_t c = 3;
-  Matrix m{r, c};
+  Matrix<double> m{r, c};
 
   // Resize the matrix.
   size_t newR = 4;
@@ -52,7 +52,7 @@ TEST(Matrix, SingleCellAccess) {
   size_t r = 2;
   size_t c = 3;
   std::vector<double> data{1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
-  Matrix m{r, c, data};
+  Matrix<double> m{r, c, data};
 
   // Assert accessing data at specific cells is correct.
   double num = 1.0;
@@ -70,7 +70,7 @@ TEST(Matrix, EntireRowAccess) {
   size_t r = 2;
   size_t c = 3;
   std::vector<double> data{1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
-  Matrix m{r, c, data};
+  Matrix<double> m{r, c, data};
 
   // Assert accessing rows is correct.
   double num = 1.0;
@@ -92,7 +92,7 @@ TEST(Matrix, EntireColAccess) {
   size_t r = 2;
   size_t c = 3;
   std::vector<double> data{1.0, 2.0, 3.0, 4.0, 5.0, 6.0};
-  Matrix m{r, c, data};
+  Matrix<double> m{r, c, data};
 
   // Assert accessing columns is correct.
   double num = 1.0;
