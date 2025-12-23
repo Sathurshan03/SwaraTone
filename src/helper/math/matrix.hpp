@@ -71,17 +71,36 @@ class Matrix {
   }
 
   /**
+   * @brief Single cell access directly from 1D vector. Accessing i returns
+   * cell (i / c, i % c)
+   *
+   * @param[in] i position.
+   * @return T& value at pos i.
+   */
+  inline T& operator()(size_t i) { return data[i]; }
+
+  /**
+   * @brief Single cell access directly from 1D vector. Accessing i returns
+   * cell (i / c, i % c)
+   *
+   * @param[in] i position.
+   * @return T& value at pos i.
+   */
+  inline const T& operator()(size_t i) const { return data[i]; }
+
+  /**
    * @brief Matrix element-wise addition. A += B
    *
    * @param b matrix to add with B.
    * @return Matrix<T>& Result A.
    */
-  Matrix<T>& operator+=(const Matrix<T>& b) {
+  template <typename U>
+  Matrix<T>& operator+=(const Matrix<U>& b) {
     assert(this->size() == b.size() &&
            "Matrix elementwise addition have incorrect dimensions.");
 
     for (size_t i = 0; i < data.size(); i++) {
-      data[i] += b.data[i];
+      data[i] += b(i);
     }
     return *this;
   }
@@ -92,12 +111,13 @@ class Matrix {
    * @param b multiplier matrix B.
    * @return Matrix<T>& Result A.
    */
-  Matrix<T>& operator*=(const Matrix<T>& b) {
+  template <typename U>
+  Matrix<T>& operator*=(const Matrix<U>& b) {
     assert(this->size() == b.size() &&
            "Matrix elementwise multiplication have incorrect dimensions.");
 
     for (size_t i = 0; i < data.size(); i++) {
-      data[i] *= b.data[i];
+      data[i] *= b(i);
     }
     return *this;
   }
@@ -189,8 +209,8 @@ class Matrix {
  * @param b matrix to add with B.
  * @return Matrix<T>& Result A.
  */
-template <typename T>
-Matrix<T> operator+(Matrix<T> c, const Matrix<T>& b) {
+template <typename T, typename U>
+Matrix<T> operator+(Matrix<T> c, const Matrix<U>& b) {
   c += b;
   return c;
 }
@@ -202,8 +222,8 @@ Matrix<T> operator+(Matrix<T> c, const Matrix<T>& b) {
  * @param b multiplier matrix B.
  * @return Matrix<T>& Result A.
  */
-template <typename T>
-Matrix<T> operator*(Matrix<T> c, const Matrix<T>& b) {
+template <typename T, typename U>
+Matrix<T> operator*(Matrix<T> c, const Matrix<U>& b) {
   c *= b;
   return c;
 }

@@ -9,7 +9,11 @@
 
 #include <gtest/gtest.h>
 
+#include <complex>
+
 #include "test_helper.h"
+
+typedef std::complex<double> DoubleComplex;
 
 /** @brief Tests matrix dimensions are correct at initialization. */
 TEST(Matrix, Dimension) {
@@ -172,6 +176,35 @@ TEST(Matrix, ElementWiseAdditionInPlace) {
   }
 }
 
+/** @brief Verify that element wise addition with complex double works
+ * correctly. */
+TEST(Matrix, ComplexAddition) {
+  // Initialize 2 matrices with data.
+  size_t r = 2;
+  size_t c = 2;
+  std::vector<DoubleComplex> data1{
+      {1.0, 2.0}, {3.0, 4.0}, {5.0, 6.0}, {7.0, 8.0}};
+  std::vector<double> data2{2.0, 2.0, 2.0, 2.0};
+  Matrix<DoubleComplex> m1{r, c, data1};
+  Matrix<double> m2{r, c, data2};
+
+  // Initialize expected matrix result.
+  std::vector<DoubleComplex> data3{
+      {3.0, 2.0}, {5.0, 4.0}, {7.0, 6.0}, {9.0, 8.0}};
+  Matrix<DoubleComplex> expected{r, c, data3};
+
+  // Apply addition and assert that the result is near the expected
+  // matrix.
+  m1 += m2;
+
+  for (size_t i = 0; i < r; i++) {
+    for (size_t j = 0; j < c; j++) {
+      ASSERT_NEAR(m1(i, j).real(), expected(i, j).real(), PRECISION_ERROR);
+      ASSERT_NEAR(m1(i, j).imag(), expected(i, j).imag(), PRECISION_ERROR);
+    }
+  }
+}
+
 /** @brief Verify an assertion is thrown when there is incorrect matrix
  * dimension during multiply two matrices. */
 TEST(Matrix, MultiplicationIncorrectDim) {
@@ -232,6 +265,35 @@ TEST(Matrix, ElementWiseMultiplicationInPlace) {
   for (size_t i = 0; i < r; i++) {
     for (size_t j = 0; j < c; j++) {
       ASSERT_NEAR(m1(i, j), expected(i, j), PRECISION_ERROR);
+    }
+  }
+}
+
+/** @brief Verify that element wise multiplication with complex double works
+ * correctly. */
+TEST(Matrix, ComplexMultiplication) {
+  // Initialize 2 matrices with data.
+  size_t r = 2;
+  size_t c = 2;
+  std::vector<DoubleComplex> data1{
+      {1.0, 2.0}, {3.0, 4.0}, {5.0, 6.0}, {7.0, 8.0}};
+  std::vector<double> data2{2.0, 2.0, 2.0, 2.0};
+  Matrix<DoubleComplex> m1{r, c, data1};
+  Matrix<double> m2{r, c, data2};
+
+  // Initialize expected matrix result.
+  std::vector<DoubleComplex> data3{
+      {2.0, 4.0}, {6.0, 8.0}, {10.0, 12.0}, {14.0, 16.0}};
+  Matrix<DoubleComplex> expected{r, c, data3};
+
+  // Apply multiplication and assert that the result is near the expected
+  // matrix.
+  m1 *= m2;
+
+  for (size_t i = 0; i < r; i++) {
+    for (size_t j = 0; j < c; j++) {
+      ASSERT_NEAR(m1(i, j).real(), expected(i, j).real(), PRECISION_ERROR);
+      ASSERT_NEAR(m1(i, j).imag(), expected(i, j).imag(), PRECISION_ERROR);
     }
   }
 }
