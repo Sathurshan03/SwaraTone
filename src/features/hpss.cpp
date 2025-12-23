@@ -17,7 +17,6 @@
 #include "stats.h"
 #include "windowing_functions.h"
 
-
 static const size_t MEDIAN_FILTER_SIZE = 5;
 static const size_t MEDIAN_OFFSET = (MEDIAN_FILTER_SIZE - 1) / 2;
 
@@ -36,9 +35,30 @@ void runHPSS(std::vector<double>& in, Matrix& mH, Matrix& mP) {
 
   // 1. Compute FFT on input signal to create a power spectrum.
   LOG_INFO("Computing FFT on input signal");
+  createPowerSpectrumTs(in, powerSpectrumTs);
+
+  // 2. Apply median filtering.
+  LOG_INFO("Applying median filtering.");
+  Matrix yH{r, c};
+  Matrix yP{r, c};
+  runMedianFiltering(powerSpectrumTs, yH, yP);
+
+  // 3. Apply mask.
+  LOG_INFO("Applying filter mask.");
+  std::pair<double, double> maskSize = std::make_pair(r, c);
+  mH.resize(maskSize);
+  mP.resize(maskSize);
+  applySoftMask(yH, yP, mH, mP);
+
+  LOG_INFO("Finished running HPSS.");
+}
+
+void createPowerSpectrumTs(std::vector<double>& in, Matrix& powerSpectrumTs) {
+  const size_t r = powerSpectrumTs.getNumRows();
+  const size_t c = powerSpectrumTs.getNumCols();
+
   frequencyDomain X;
   initFrequncyDomain(WINDOW_SIZE, X);
-  std::vector<double> powerSpectrum(WINDOW_SIZE);
 
   for (size_t i = 0; i < c; i++) {
     double* x = in.data() + i * HALF_WINDOW_SIZE;
@@ -51,11 +71,11 @@ void runHPSS(std::vector<double>& in, Matrix& mH, Matrix& mP) {
       powerSpectrumTs(j, i) = std::norm(X.frequency[j]);
     }
   }
+}
 
-  // 2. Apply median filtering.
-  LOG_INFO("Applying median filtering.");
-  Matrix yH{r, c};
-  Matrix yP{r, c};
+void runMedianFiltering(Matrix& powerSpectrumTs, Matrix& yH, Matrix& yP) {
+  const size_t r = powerSpectrumTs.getNumRows();
+  const size_t c = powerSpectrumTs.getNumCols();
 
   // Rows: Harmonics
   for (size_t i = 0; i < r; i++) {
@@ -84,13 +104,4 @@ void runHPSS(std::vector<double>& in, Matrix& mH, Matrix& mP) {
       last++;
     }
   }
-
-  // 3. Apply mask.
-  LOG_INFO("Applying filter mask.");
-  std::pair<double, double> maskSize = std::make_pair(r, c);
-  mH.resize(maskSize);
-  mP.resize(maskSize);
-  applySoftMask(yH, yP, mH, mP);
-
-  LOG_INFO("Finished running HPSS.");
 }
