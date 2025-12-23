@@ -3,6 +3,7 @@
 # Add source code to executable.
 target_sources(${SourceLib} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/hpss.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/signalReconstruction.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/spectrum.cpp
 )
 

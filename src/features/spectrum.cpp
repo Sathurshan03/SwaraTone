@@ -10,7 +10,7 @@
 #include "constants.h"
 #include "fft.h"
 #include "frequencyDomain.h"
-#include "windowing_functions.hpp"
+#include "windowingFunctions.hpp"
 
 void createComplexSpectrum(std::vector<double>& in,
                            Matrix<std::complex<double>>& complexSpectrum,

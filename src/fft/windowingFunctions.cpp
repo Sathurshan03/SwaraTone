@@ -1,11 +1,11 @@
 /**
  *******************************************************************************
- * @file    windowing_functions.cpp
+ * @file    windowingFunctions.cpp
  * @brief   Windowing functions source.
  *******************************************************************************
  */
 
-#include "windowing_functions.hpp"
+#include "windowingFunctions.hpp"
 
 #include "constants.h"
 

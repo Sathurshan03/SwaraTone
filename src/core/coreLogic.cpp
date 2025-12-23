@@ -12,6 +12,7 @@
 #include "hpss.h"
 #include "matrix.hpp"
 #include "mp3.h"
+#include "signalReconstruction.h"
 #include "spectrum.h"
 
 void runCore(std::string filePath) {
@@ -39,6 +40,10 @@ void runCore(std::string filePath) {
   std::tie(hComplexSpectrum, pComplexSpectrum) =
       runHPSS(complexSpectrum, powerSpectrum);
 
-  // Reconstruct signal
-  // TODO.
+  // Reconstruct signals.
+  LOG_INFO("Reconstructing signals.");
+  std::vector<double> harmonics{};
+  std::vector<double> percussive{};
+  reconstructSignal(hComplexSpectrum, WINDOW_SIZE, harmonics);
+  reconstructSignal(pComplexSpectrum, WINDOW_SIZE, percussive);
 }
