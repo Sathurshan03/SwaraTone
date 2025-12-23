@@ -16,6 +16,8 @@ target_include_directories(${SourceLib} PUBLIC
 
 # Add subdirectories (each adds sources/includes).
 add_subdirectory(audio_file)
+add_subdirectory(core)
+add_subdirectory(features)
 add_subdirectory(fft)
 add_subdirectory(helper)
 add_subdirectory(mask)
