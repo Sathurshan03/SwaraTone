@@ -63,12 +63,14 @@ void runIFFT(std::vector<doubleComplex>& X, uint32_t N,
 
 void reverseNyquistTheorem(std::vector<doubleComplex>& X,
                            std::vector<doubleComplex>& fullFrequency) {
-  size_t Npos = X.size();
-  fullFrequency.assign(std::begin(X), std::end(X));
-  fullFrequency.resize(2 * (Npos - 1));
+  const size_t Npos = X.size();
+  const size_t N = 2 * (Npos - 1);
+  fullFrequency.resize(N);
+
+  std::copy(X.begin(), X.end(), fullFrequency.begin());
 
   // Mirror negative frequencies (exclude DC [0] and Nyquist [N/2])
-  for (size_t i = Npos - 2; i >= 1; --i) {
-    fullFrequency[i] = 2.0 * std::conj(X[i]);
+  for (size_t i = 1; i < Npos - 1; i++) {
+    fullFrequency[N - i] = std::conj(X[i]);
   }
 }

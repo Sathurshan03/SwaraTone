@@ -21,6 +21,9 @@ struct MP3Data {
   /** @brief Channel classification. */
   Channel channel;
 
+  /** @brief Sample rate of the MP3 data. */
+  int sampleRate_hz;
+
   /** @brief Hold PCM data of MP3. Holds left channel if stereo. */
   std::vector<double> channel1;
 

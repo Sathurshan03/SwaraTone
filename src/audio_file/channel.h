@@ -5,6 +5,8 @@
  ******************************************************************************
  */
 
+#pragma once
+
 /** @brief Classification of audio channels. */
 enum class Channel {
   Mono = 1,

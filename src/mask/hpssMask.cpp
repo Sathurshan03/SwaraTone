@@ -7,8 +7,8 @@
 
 #include "hpssMask.hpp"
 
-void applyBinaryMask(const Matrix& yH, const Matrix& yP, Matrix& mH,
-                     Matrix& mP) {
+void applyBinaryMask(const Matrix<double>& yH, const Matrix<double>& yP,
+                     Matrix<double>& mH, Matrix<double>& mP) {
   // Resize masks if needed.
   if (mH.size() != yH.size()) {
     mH.resize(yH.size());
@@ -26,7 +26,8 @@ void applyBinaryMask(const Matrix& yH, const Matrix& yP, Matrix& mH,
   }
 }
 
-void applySoftMask(const Matrix& yH, const Matrix& yP, Matrix& mH, Matrix& mP) {
+void applySoftMask(const Matrix<double>& yH, const Matrix<double>& yP,
+                   Matrix<double>& mH, Matrix<double>& mP) {
   // Resize masks if needed.
   if (mH.size() != mH.size()) {
     mH.resize(yH.size());

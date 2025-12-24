@@ -24,6 +24,10 @@ const uint32_t WINDOW_SIZE = 4096U;
 
 const uint32_t HALF_WINDOW_SIZE = WINDOW_SIZE / 2;
 
+const uint32_t HOP_SIZE = WINDOW_SIZE / 4;
+
+const uint32_t PADDING_SIZE = HALF_WINDOW_SIZE;
+
 const double PI = M_PI;
 
 // Host device endian detection.

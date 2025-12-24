@@ -7,32 +7,32 @@
 
 #pragma once
 
+#include <complex>
 #include <vector>
 
 #include "matrix.hpp"
 
+typedef Matrix<std::complex<double>> ComplexMatrix;
+
 /**
  * @brief Run HPSS algo.
  *
- * @param[in] in Input signal.
- * @param[out] harmonics Harmonic component mask.
- * @param[out] percussive Percussive component mask.
+ * @param[in] complexSpectrum Complex Spectrum.
+ * @param[in] powerSpectrum Power spectrum.
+ * @param[in] softMask True to use soft mask. False to use binary mask.
+ * @return std::pair<ComplexMatrix, ComplexMatrix> First item is the harmonic
+ * components from the complex spectrum and second is the percussive component.
  */
-void runHPSS(std::vector<double>& in, Matrix& mH, Matrix& mP);
+std::pair<ComplexMatrix, ComplexMatrix> runHPSS(ComplexMatrix& complexSpectrum,
+                                                Matrix<double>& powerSpectrum,
+                                                bool softMask = true);
 
 /**
- * @brief Create a power spectrum time series from input signal.
+ * @brief Run median filtering on power spectrum.
  *
- * @param[in] in Input signal
- * @param[out] powerSpectrumTs Power spectrum time series of the input.
- */
-void createPowerSpectrumTs(std::vector<double>& in, Matrix& powerSpectrumTs);
-
-/**
- * @brief Run median filtering on power spectrum time series.
- *
- * @param[in] powerSpectrumTs Power spectrum time series.
+ * @param[in] powerSpectrum Power spectrum.
  * @param[out] yH Median filter for harmonics.
  * @param[out] yP Median filter for percussives.
  */
-void runMedianFiltering(Matrix& powerSpectrumTs, Matrix& yH, Matrix& yP);
+void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
+                        Matrix<double>& yP);

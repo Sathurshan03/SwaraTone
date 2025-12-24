@@ -8,82 +8,59 @@
 #include "hpss.h"
 
 #include "constants.h"
-#include "fft.h"
-#include "fft_helper.hpp"
-#include "frequencyDomain.h"
 #include "hpssMask.hpp"
 #include "logging.h"
-#include "powers.hpp"
 #include "stats.h"
-#include "windowing_functions.h"
 
-static const size_t MEDIAN_FILTER_SIZE = 5;
-static const size_t MEDIAN_OFFSET = (MEDIAN_FILTER_SIZE - 1) / 2;
+static const size_t HMEDIAN_FILTER_SIZE = 9;
+static const size_t PMEDIAN_FILTER_SIZE = 5;
+static const size_t HMEDIAN_OFFSET = (HMEDIAN_FILTER_SIZE - 1) / 2;
+static const size_t PMEDIAN_OFFSET = (PMEDIAN_FILTER_SIZE - 1) / 2;
 
-// TODO: we should throw each step into its own function.
-
-void runHPSS(std::vector<double>& in, Matrix& mH, Matrix& mP) {
+std::pair<ComplexMatrix, ComplexMatrix> runHPSS(ComplexMatrix& complexSpectrum,
+                                                Matrix<double>& powerSpectrum,
+                                                bool softMask) {
   LOG_INFO("Running HPSS.");
 
-  // Initialize power spectrum matrix. Subtract 1 from number windows to avoid
-  // partially filled window.
-  const size_t numFreqBins = getNyquistSize(WINDOW_SIZE);
-  const size_t numWindows = (in.size() / HALF_WINDOW_SIZE) - 1;
-  const size_t r = numFreqBins;
-  const size_t c = numWindows;
-  Matrix powerSpectrumTs{r, c};
-
-  // 1. Compute FFT on input signal to create a power spectrum.
-  LOG_INFO("Computing FFT on input signal");
-  createPowerSpectrumTs(in, powerSpectrumTs);
-
-  // 2. Apply median filtering.
+  // 1. Apply median filtering.
   LOG_INFO("Applying median filtering.");
-  Matrix yH{r, c};
-  Matrix yP{r, c};
-  runMedianFiltering(powerSpectrumTs, yH, yP);
+  const size_t r = powerSpectrum.getNumRows();
+  const size_t c = powerSpectrum.getNumCols();
 
-  // 3. Apply mask.
+  Matrix<double> yH{r, c};
+  Matrix<double> yP{r, c};
+  runMedianFiltering(powerSpectrum, yH, yP);
+
+  // 2. Create mask.
   LOG_INFO("Applying filter mask.");
-  std::pair<double, double> maskSize = std::make_pair(r, c);
-  mH.resize(maskSize);
-  mP.resize(maskSize);
-  applySoftMask(yH, yP, mH, mP);
+  Matrix<double> mH{r, c};
+  Matrix<double> mP{r, c};
+
+  if (softMask) {
+    applySoftMask(yH, yP, mH, mP);
+  } else {
+    applyBinaryMask(yH, yP, mH, mP);
+  }
+
+  // 3. Apply mask to complex spectrum.
+  ComplexMatrix hComplexSpectrum = complexSpectrum * mH;
+  ComplexMatrix pComplexSpectrum = complexSpectrum * mP;
 
   LOG_INFO("Finished running HPSS.");
+  return std::make_pair(hComplexSpectrum, pComplexSpectrum);
 }
 
-void createPowerSpectrumTs(std::vector<double>& in, Matrix& powerSpectrumTs) {
-  const size_t r = powerSpectrumTs.getNumRows();
-  const size_t c = powerSpectrumTs.getNumCols();
-
-  frequencyDomain X;
-  initFrequncyDomain(WINDOW_SIZE, X);
-
-  for (size_t i = 0; i < c; i++) {
-    double* x = in.data() + i * HALF_WINDOW_SIZE;
-
-    applyHanningWindow(x, WINDOW_SIZE);
-    runFFT(x, WINDOW_SIZE, X);
-
-    // Create power spectrum.
-    for (size_t j = 0; j < r; j++) {
-      powerSpectrumTs(j, i) = std::norm(X.frequency[j]);
-    }
-  }
-}
-
-void runMedianFiltering(Matrix& powerSpectrumTs, Matrix& yH, Matrix& yP) {
-  const size_t r = powerSpectrumTs.getNumRows();
-  const size_t c = powerSpectrumTs.getNumCols();
+void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
+                        Matrix<double>& yP) {
+  const size_t r = powerSpectrum.getNumRows();
+  const size_t c = powerSpectrum.getNumCols();
 
   // Rows: Harmonics
   for (size_t i = 0; i < r; i++) {
-    std::vector<double> rowData = powerSpectrumTs.getRow(i);
-
+    std::vector<double> rowData = powerSpectrum.getRow(i);
     auto first = rowData.begin();
-    auto last = rowData.begin() + MEDIAN_FILTER_SIZE;
-    for (size_t j = MEDIAN_OFFSET; j < c - MEDIAN_OFFSET; j++) {
+    auto last = rowData.begin() + HMEDIAN_FILTER_SIZE;
+    for (size_t j = HMEDIAN_OFFSET; j < c - HMEDIAN_OFFSET; j++) {
       std::vector<double> vec(first, last);
       yH(i, j) = median(vec);
       first++;
@@ -93,13 +70,12 @@ void runMedianFiltering(Matrix& powerSpectrumTs, Matrix& yH, Matrix& yP) {
 
   // Cols: Percussion
   for (size_t i = 0; i < c; i++) {
-    std::vector<double> colData = powerSpectrumTs.getCol(i);
-
+    std::vector<double> colData = powerSpectrum.getCol(i);
     auto first = colData.begin();
-    auto last = colData.begin() + MEDIAN_FILTER_SIZE;
-    for (size_t j = MEDIAN_OFFSET; j < c - MEDIAN_OFFSET; j++) {
+    auto last = colData.begin() + PMEDIAN_FILTER_SIZE;
+    for (size_t j = PMEDIAN_OFFSET; j < r - PMEDIAN_OFFSET; j++) {
       std::vector<double> vec(first, last);
-      yH(i, j) = median(vec);
+      yP(j, i) = median(vec);
       first++;
       last++;
     }

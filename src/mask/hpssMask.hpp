@@ -7,10 +7,13 @@
 
 #pragma once
 
+#include <cmath>
+
 #include "matrix.hpp"
 
 static const double epsilon = 0.0000001;
 static const double epsilonHalf = epsilon / 2.0;
+static const double softMaskExp = 0.75;
 
 /**
  * @brief Applies binary mask.
@@ -40,9 +43,11 @@ inline void binaryMask(const double yH, const double yP, double& mH,
  * @param[out] mP Soft mask for percussive component.
  */
 inline void softMask(const double yH, const double yP, double& mH, double& mP) {
-  double denominator = yH + yP + epsilon;
-  mH = (yH + epsilonHalf) / denominator;
-  mP = (yP + epsilonHalf) / denominator;
+  double denominator =
+      std::pow(yH, softMaskExp) + std::pow(yP, softMaskExp) + epsilon;
+
+  mH = (std::pow(yH, softMaskExp) + epsilonHalf) / denominator;
+  mP = (std::pow(yP, softMaskExp) + epsilonHalf) / denominator;
 }
 
 /**
@@ -56,8 +61,8 @@ inline void softMask(const double yH, const double yP, double& mH, double& mP) {
  * @param[out] mH Binary mask for harmonic components.
  * @param[out] mP Binary mask for percussive components.
  */
-void applyBinaryMask(const Matrix& yH, const Matrix& yP, Matrix& mH,
-                     Matrix& mP);
+void applyBinaryMask(const Matrix<double>& yH, const Matrix<double>& yP,
+                     Matrix<double>& mH, Matrix<double>& mP);
 
 /**
  * @brief Applies a soft mask to separate harmonic and percussive components.
@@ -70,4 +75,5 @@ void applyBinaryMask(const Matrix& yH, const Matrix& yP, Matrix& mH,
  * @param[out] mH Soft mask for harmonic components.
  * @param[out] mP Soft mask for percussive components.
  */
-void applySoftMask(const Matrix& yH, const Matrix& yP, Matrix& mH, Matrix& mP);
+void applySoftMask(const Matrix<double>& yH, const Matrix<double>& yP,
+                   Matrix<double>& mH, Matrix<double>& mP);
