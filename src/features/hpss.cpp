@@ -56,7 +56,6 @@ void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
   // Rows: Harmonics
   for (size_t i = 0; i < r; i++) {
     std::vector<double> rowData = powerSpectrum.getRow(i);
-
     auto first = rowData.begin();
     auto last = rowData.begin() + MEDIAN_FILTER_SIZE;
     for (size_t j = MEDIAN_OFFSET; j < c - MEDIAN_OFFSET; j++) {
@@ -70,12 +69,11 @@ void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
   // Cols: Percussion
   for (size_t i = 0; i < c; i++) {
     std::vector<double> colData = powerSpectrum.getCol(i);
-
     auto first = colData.begin();
     auto last = colData.begin() + MEDIAN_FILTER_SIZE;
-    for (size_t j = MEDIAN_OFFSET; j < c - MEDIAN_OFFSET; j++) {
+    for (size_t j = MEDIAN_OFFSET; j < r - MEDIAN_OFFSET; j++) {
       std::vector<double> vec(first, last);
-      yH(i, j) = median(vec);
+      yP(j, i) = median(vec);
       first++;
       last++;
     }

@@ -22,11 +22,13 @@ void createComplexSpectrum(std::vector<double>& in,
   initFrequncyDomain(windowSize, X);
   const uint32_t halfWindowSize = windowSize / 2;
 
+  std::vector<double> x(windowSize);
   for (size_t i = 0; i < c; i++) {
-    double* x = in.data() + i * halfWindowSize;
+    std::copy(in.begin() + i * halfWindowSize,
+              in.begin() + i * halfWindowSize + windowSize, x.begin());
 
-    applyHanningWindow(x, windowSize);
-    runFFT(x, windowSize, X);
+    applySqrtHanningWindow(x.data(), windowSize);
+    runFFT(x.data(), windowSize, X);
 
     // Store fourier transform values into the complex spectrum.
     for (size_t j = 0; j < r; j++) {

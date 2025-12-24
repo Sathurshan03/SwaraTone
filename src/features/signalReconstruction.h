@@ -19,4 +19,4 @@
  * @param[out] output reconstructed signal.
  */
 void reconstructSignal(Matrix<std::complex<double>> complexSpectrum,
-                       uint32_t windowSize, std::vector<double> output);
+                       uint32_t windowSize, std::vector<double>& output);
