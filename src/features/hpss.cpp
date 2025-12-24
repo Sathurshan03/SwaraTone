@@ -43,6 +43,7 @@ void runHPSS(ComplexMatrix& complexSpectrum, Matrix<double>& powerSpectrum,
   }
 
   // 3. Apply mask to complex spectrum.
+  LOG_INFO("Applying mask to complex spectrum.");
   hComplexSpectrum = complexSpectrum * mH;
   pComplexSpectrum = complexSpectrum * mP;
 
@@ -62,8 +63,8 @@ void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
     for (size_t j = HMEDIAN_OFFSET; j < c - HMEDIAN_OFFSET; j++) {
       std::vector<double> vec(first, last);
       yH(i, j) = median(vec);
-      first++;
-      last++;
+      ++first;
+      ++last;
     }
   }
 
@@ -75,8 +76,8 @@ void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
     for (size_t j = PMEDIAN_OFFSET; j < r - PMEDIAN_OFFSET; j++) {
       std::vector<double> vec(first, last);
       yP(j, i) = median(vec);
-      first++;
-      last++;
+      ++first;
+      ++last;
     }
   }
 }

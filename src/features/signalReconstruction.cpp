@@ -32,8 +32,8 @@ void reconstructSignal(Matrix<std::complex<double>>& complexSpectrum,
   std::vector<double> sqrtWeights(WINDOW_SIZE);
   std::vector<double> weights(WINDOW_SIZE);
   for (size_t i = 0; i < WINDOW_SIZE; i++) {
-    weights[i] = getHanningWindowWeight(i, WINDOW_SIZE);
     sqrtWeights[i] = getSqrtHanningWindowWeight(i, WINDOW_SIZE);
+    weights[i] = sqrtWeights[i] * sqrtWeights[i];
   }
 
   // Reconstruct signal while considering the window weights initially applied

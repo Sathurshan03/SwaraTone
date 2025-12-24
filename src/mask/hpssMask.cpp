@@ -18,11 +18,11 @@ void applyBinaryMask(const Matrix<double>& yH, const Matrix<double>& yP,
     mP.resize(yP.size());
   }
 
+  const size_t numOps = yH.getNumRows() * yH.getNumCols();
+
   // Apply binary mask.
-  for (int i = 0; i < yH.getNumRows(); i++) {
-    for (int j = 0; j < yH.getNumCols(); j++) {
-      binaryMask(yH(i, j), yP(i, j), mH(i, j), mP(i, j));
-    }
+  for (size_t i = 0; i < numOps; i++) {
+    binaryMask(yH(i), yP(i), mH(i), mP(i));
   }
 }
 
@@ -37,10 +37,10 @@ void applySoftMask(const Matrix<double>& yH, const Matrix<double>& yP,
     mP.resize(yP.size());
   }
 
+  const size_t numOps = yH.getNumRows() * yH.getNumCols();
+
   // Apply soft mask.
-  for (int i = 0; i < yH.getNumRows(); i++) {
-    for (int j = 0; j < yH.getNumCols(); j++) {
-      softMask(yH(i, j), yP(i, j), mH(i, j), mP(i, j));
-    }
+  for (size_t i = 0; i < numOps; i++) {
+    softMask(yH(i), yP(i), mH(i), mP(i));
   }
 }

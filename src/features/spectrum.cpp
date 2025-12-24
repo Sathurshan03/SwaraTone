@@ -36,12 +36,9 @@ void createComplexSpectrum(std::vector<double>& in,
 
 void createPowerSpectrum(const Matrix<std::complex<double>>& complexSpectrum,
                          Matrix<double>& powerSpectrum) {
-  const size_t r = complexSpectrum.getNumRows();
-  const size_t c = complexSpectrum.getNumCols();
+  const size_t numOps = powerSpectrum.getNumRows() * powerSpectrum.getNumCols();
 
-  for (size_t i = 0; i < c; i++) {
-    for (size_t j = 0; j < r; j++) {
-      powerSpectrum(j, i) = std::norm(complexSpectrum(j, i));
-    }
+  for (size_t i = 0; i < numOps; i++) {
+    powerSpectrum(i) = std::norm(complexSpectrum(i));
   }
 }

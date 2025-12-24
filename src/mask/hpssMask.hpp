@@ -9,10 +9,11 @@
 
 #include <cmath>
 
+#include "constants.h"
 #include "matrix.hpp"
 
-static const double epsilon = 0.0000001;
-static const double epsilonHalf = epsilon / 2.0;
+static const double epsilon = DOUBLE_EPS * 2;
+static const double epsilonHalf = DOUBLE_EPS;
 static const double softMaskExp = 0.75;
 
 /**
