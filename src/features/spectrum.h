@@ -17,11 +17,9 @@
  *
  * @param[in] in Input signal.
  * @param[out] complexSpectrum Complex spectrum of the input.
- * @param[in] windowSize Window size for calculating the complex spectrum.
  */
 void createComplexSpectrum(std::vector<double>& in,
-                           Matrix<std::complex<double>>& complexSpectrum,
-                           uint32_t windowSize);
+                           Matrix<std::complex<double>>& complexSpectrum);
 
 /**
  * @brief Create a power spectrum from the complex spectrum.

@@ -10,25 +10,24 @@
 #include "constants.h"
 #include "fft.h"
 #include "frequencyDomain.h"
+#include "logging.h"
 #include "windowingFunctions.hpp"
 
 void createComplexSpectrum(std::vector<double>& in,
-                           Matrix<std::complex<double>>& complexSpectrum,
-                           uint32_t windowSize) {
+                           Matrix<std::complex<double>>& complexSpectrum) {
   const size_t r = complexSpectrum.getNumRows();
   const size_t c = complexSpectrum.getNumCols();
 
   frequencyDomain X;
-  initFrequncyDomain(windowSize, X);
-  const uint32_t halfWindowSize = windowSize / 2;
+  initFrequncyDomain(WINDOW_SIZE, X);
 
-  std::vector<double> x(windowSize);
+  std::vector<double> x(WINDOW_SIZE);
   for (size_t i = 0; i < c; i++) {
-    std::copy(in.begin() + i * halfWindowSize,
-              in.begin() + i * halfWindowSize + windowSize, x.begin());
+    std::copy(in.begin() + i * HOP_SIZE,
+              in.begin() + i * HOP_SIZE + WINDOW_SIZE, x.begin());
 
-    applySqrtHanningWindow(x.data(), windowSize);
-    runFFT(x.data(), windowSize, X);
+    applySqrtHanningWindow(x.data(), WINDOW_SIZE);
+    runFFT(x.data(), WINDOW_SIZE, X);
 
     // Store fourier transform values into the complex spectrum.
     for (size_t j = 0; j < r; j++) {

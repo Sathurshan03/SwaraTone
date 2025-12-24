@@ -88,7 +88,7 @@ MP3Data handleMonoChannel(mp3dec_file_info_t& info) {
     normalizedPcm[i] = static_cast<double>(info.buffer[i]) / INT16_MAX;
   }
 
-  MP3Data data = {info.samples, Channel::Mono, normalizedPcm, {}};
+  MP3Data data = {info.samples, Channel::Mono, info.hz, normalizedPcm, {}};
   return data;
 }
 
@@ -107,7 +107,7 @@ MP3Data handleStereoChannel(mp3dec_file_info_t& info) {
         static_cast<double>(info.buffer[2 * i + 1]) / INT16_MAX;
   }
 
-  MP3Data data = {numSamples, Channel::Stereo, normalizedLeftPcm,
+  MP3Data data = {numSamples, Channel::Stereo, info.hz, normalizedLeftPcm,
                   normalizedRightPcm};
   return data;
 }

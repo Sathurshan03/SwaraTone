@@ -15,8 +15,7 @@
  * @brief Reconstruction signal from complex spectrum
  *
  * @param[in] complexSpectrum Complex spectrum.
- * @param[in] windowSize Size of window.
  * @param[out] output reconstructed signal.
  */
-void reconstructSignal(Matrix<std::complex<double>> complexSpectrum,
-                       uint32_t windowSize, std::vector<double>& output);
+void reconstructSignal(Matrix<std::complex<double>>& complexSpectrum,
+                       std::vector<double>& output);
