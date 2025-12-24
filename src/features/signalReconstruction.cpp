@@ -22,9 +22,10 @@ void reconstructSignal(Matrix<std::complex<double>>& complexSpectrum,
   std::vector<std::complex<double>> X(r);
   std::vector<std::complex<double>> x;
 
-  std::vector<double> value(paddedSignalSize, 0.0);
-  double denominator = HALF_WINDOW_SIZE / HOP_SIZE;
+  std::vector<double> constructedSignal(paddedSignalSize, 0.0);
   output.resize(signalSize);
+
+  double denominator = HALF_WINDOW_SIZE / HOP_SIZE;
 
   // Temporary store window weights. Allows for faster access when
   // reconstructing signal.
@@ -43,11 +44,12 @@ void reconstructSignal(Matrix<std::complex<double>>& complexSpectrum,
 
     for (size_t j = 0; j < WINDOW_SIZE; j++) {
       size_t pos = i * HOP_SIZE + j;
-      value[pos] += x[j].real() * sqrtWeights[j] / denominator;
+      constructedSignal[pos] += x[j].real() * sqrtWeights[j] / denominator;
     }
   }
 
   // Remove intially added zero padding.
-  std::copy(value.begin() + PADDING_SIZE,
-            value.begin() + PADDING_SIZE + signalSize, output.begin());
+  std::copy(constructedSignal.begin() + PADDING_SIZE,
+            constructedSignal.begin() + PADDING_SIZE + signalSize,
+            output.begin());
 }

@@ -42,8 +42,7 @@ void runCore(std::string filePath) {
   // Apply HPSS.
   Matrix<std::complex<double>> hComplexSpectrum{};
   Matrix<std::complex<double>> pComplexSpectrum{};
-  std::tie(hComplexSpectrum, pComplexSpectrum) =
-      runHPSS(complexSpectrum, powerSpectrum);
+  runHPSS(complexSpectrum, powerSpectrum, hComplexSpectrum, pComplexSpectrum);
 
   // Reconstruct signals.
   LOG_INFO("Reconstructing signals.");

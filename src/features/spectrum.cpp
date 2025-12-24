@@ -20,8 +20,8 @@ void createComplexSpectrum(std::vector<double>& in,
 
   frequencyDomain X;
   initFrequncyDomain(WINDOW_SIZE, X);
-
   std::vector<double> x(WINDOW_SIZE);
+
   for (size_t i = 0; i < c; i++) {
     std::copy(in.begin() + i * HOP_SIZE,
               in.begin() + i * HOP_SIZE + WINDOW_SIZE, x.begin());
@@ -30,9 +30,7 @@ void createComplexSpectrum(std::vector<double>& in,
     runFFT(x.data(), WINDOW_SIZE, X);
 
     // Store fourier transform values into the complex spectrum.
-    for (size_t j = 0; j < r; j++) {
-      complexSpectrum(j, i) = X.frequency[j];
-    }
+    complexSpectrum.setCol(i, X.frequency);
   }
 }
 

@@ -17,9 +17,9 @@ static const size_t PMEDIAN_FILTER_SIZE = 5;
 static const size_t HMEDIAN_OFFSET = (HMEDIAN_FILTER_SIZE - 1) / 2;
 static const size_t PMEDIAN_OFFSET = (PMEDIAN_FILTER_SIZE - 1) / 2;
 
-std::pair<ComplexMatrix, ComplexMatrix> runHPSS(ComplexMatrix& complexSpectrum,
-                                                Matrix<double>& powerSpectrum,
-                                                bool softMask) {
+void runHPSS(ComplexMatrix& complexSpectrum, Matrix<double>& powerSpectrum,
+             ComplexMatrix& hComplexSpectrum, ComplexMatrix& pComplexSpectrum,
+             bool softMask) {
   LOG_INFO("Running HPSS.");
 
   // 1. Apply median filtering.
@@ -43,11 +43,10 @@ std::pair<ComplexMatrix, ComplexMatrix> runHPSS(ComplexMatrix& complexSpectrum,
   }
 
   // 3. Apply mask to complex spectrum.
-  ComplexMatrix hComplexSpectrum = complexSpectrum * mH;
-  ComplexMatrix pComplexSpectrum = complexSpectrum * mP;
+  hComplexSpectrum = complexSpectrum * mH;
+  pComplexSpectrum = complexSpectrum * mP;
 
   LOG_INFO("Finished running HPSS.");
-  return std::make_pair(hComplexSpectrum, pComplexSpectrum);
 }
 
 void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,

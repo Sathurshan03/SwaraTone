@@ -191,6 +191,36 @@ class Matrix {
     return colData;
   }
 
+  /**
+   * @brief Set new values for an entire row.
+   *
+   * @param r Row number.
+   * @param vec New data.
+   */
+  void setRow(size_t r, std::vector<T> vec) {
+    if (vec.size() != cols) {
+      return;
+    }
+
+    std::copy(vec.begin(), vec.end(), data.begin() + r * cols);
+  }
+
+  /**
+   * @brief Set new values for an entire column.
+   *
+   * @param c Column number.
+   * @param vec New data.
+   */
+  void setCol(size_t c, std::vector<T> vec) {
+    if (vec.size() != rows) {
+      return;
+    }
+
+    for (size_t i = 0; i < rows; i++) {
+      data[i * cols + c] = vec[i];
+    }
+  }
+
  private:
   /** @brief The number of rows in the matrix. */
   size_t rows{0};

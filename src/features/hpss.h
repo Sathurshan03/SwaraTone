@@ -19,13 +19,13 @@ typedef Matrix<std::complex<double>> ComplexMatrix;
  *
  * @param[in] complexSpectrum Complex Spectrum.
  * @param[in] powerSpectrum Power spectrum.
+ * @param[out] hComplexSpectrum harmonics components complex spectrum.
+ * @param[out] pComplexSpectrum percussive components complex spectrum.
  * @param[in] softMask True to use soft mask. False to use binary mask.
- * @return std::pair<ComplexMatrix, ComplexMatrix> First item is the harmonic
- * components from the complex spectrum and second is the percussive component.
  */
-std::pair<ComplexMatrix, ComplexMatrix> runHPSS(ComplexMatrix& complexSpectrum,
-                                                Matrix<double>& powerSpectrum,
-                                                bool softMask = true);
+void runHPSS(ComplexMatrix& complexSpectrum, Matrix<double>& powerSpectrum,
+             ComplexMatrix& hComplexSpectrum, ComplexMatrix& pComplexSpectrum,
+             bool softMask = true);
 
 /**
  * @brief Run median filtering on power spectrum.
