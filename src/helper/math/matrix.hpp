@@ -177,6 +177,18 @@ class Matrix {
   }
 
   /**
+   * @brief Return a pointer to the start of row r.
+   *
+   * @param[in] r Row number.
+   * @return T* pointer to start of row content.
+   */
+  const T* getRowPtr(size_t r) const {
+    assert(r < rows);
+
+    return data.data() + r * cols;
+  }
+
+  /**
    * @brief Get a copy of the entire column.
    *
    * @param[in] c Column number.

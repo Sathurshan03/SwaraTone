@@ -20,7 +20,7 @@ TEST(ifft, ZeroFreq) {
   // Compute the IFFT.
   std::vector<std::complex<double>> x;
   bool isNyquistApplied{false};
-  runIFFT(X, N, x, isNyquistApplied);
+  runIFFT(X.data(), N, x, isNyquistApplied);
 
   // Assert that all time-domain samples have approximately the same amplitude.
   const double amplitude = x[0].real();
@@ -39,7 +39,7 @@ TEST(fft, impulse) {
   // Compute the IFFT.
   std::vector<std::complex<double>> x;
   bool isNyquistApplied{false};
-  runIFFT(X, N, x, isNyquistApplied);
+  runIFFT(X.data(), N, x, isNyquistApplied);
 
   // Verify that the first time-domain sample has significant amplitude.
   ASSERT_GT(x[0].real(), PRECISION_ERROR);
@@ -65,7 +65,7 @@ TEST(ifft, ZeroFreqNyquist) {
   // Compute the IFFT.
   std::vector<std::complex<double>> x;
   bool isNyquistApplied{true};
-  runIFFT(X, N, x, isNyquistApplied);
+  runIFFT(X.data(), N, x, isNyquistApplied);
 
   // Assert that all time-domain samples have approximately the same amplitude.
   const double amplitude = x[0].real();
@@ -89,7 +89,7 @@ TEST(fft, impulseNyquist) {
   // Compute the IFFT.
   std::vector<std::complex<double>> x;
   bool isNyquistApplied{true};
-  runIFFT(X, N, x, isNyquistApplied);
+  runIFFT(X.data(), N, x, isNyquistApplied);
 
   // Verify that the first time-domain sample has significant amplitude.
   ASSERT_GT(x[0].real(), PRECISION_ERROR);

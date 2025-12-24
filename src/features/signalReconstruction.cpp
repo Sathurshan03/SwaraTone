@@ -16,10 +16,9 @@ void reconstructSignal(Matrix<std::complex<double>>& complexSpectrum,
   const size_t r = complexSpectrum.getNumRows();
   const size_t c = complexSpectrum.getNumCols();
 
-  const size_t signalSize = (c - 1) * HOP_SIZE + WINDOW_SIZE;
+  const size_t signalSize = (r - 1) * HOP_SIZE + WINDOW_SIZE;
   const size_t paddedSignalSize = signalSize + PADDING_SIZE * 2;
 
-  std::vector<std::complex<double>> X(r);
   std::vector<std::complex<double>> x;
 
   std::vector<double> constructedSignal(paddedSignalSize, 0.0);
@@ -30,21 +29,17 @@ void reconstructSignal(Matrix<std::complex<double>>& complexSpectrum,
   // Temporary store window weights. Allows for faster access when
   // reconstructing signal.
   std::vector<double> sqrtWeights(WINDOW_SIZE);
-  std::vector<double> weights(WINDOW_SIZE);
   for (size_t i = 0; i < WINDOW_SIZE; i++) {
     sqrtWeights[i] = getSqrtHanningWindowWeight(i, WINDOW_SIZE);
-    weights[i] = sqrtWeights[i] * sqrtWeights[i];
   }
 
   // Reconstruct signal while considering the window weights initially applied
   // when computing the fourier transform.
-  for (size_t i = 0; i < c; i++) {
-    X = complexSpectrum.getCol(i);
-    runIFFT(X, WINDOW_SIZE, x);
-
+  for (size_t i = 0; i < r; i++) {
+    runIFFT(complexSpectrum.getRowPtr(i), c, x);
     for (size_t j = 0; j < WINDOW_SIZE; j++) {
       size_t pos = i * HOP_SIZE + j;
-      constructedSignal[pos] += x[j].real() * sqrtWeights[j] / denominator;
+      constructedSignal[pos] += (x[j].real() * sqrtWeights[j]) / denominator;
     }
   }
 
