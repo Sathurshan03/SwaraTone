@@ -12,8 +12,10 @@
 #include "logging.h"
 #include "stats.h"
 
-static const size_t MEDIAN_FILTER_SIZE = 5;
-static const size_t MEDIAN_OFFSET = (MEDIAN_FILTER_SIZE - 1) / 2;
+static const size_t HMEDIAN_FILTER_SIZE = 9;
+static const size_t PMEDIAN_FILTER_SIZE = 5;
+static const size_t HMEDIAN_OFFSET = (HMEDIAN_FILTER_SIZE - 1) / 2;
+static const size_t PMEDIAN_OFFSET = (PMEDIAN_FILTER_SIZE - 1) / 2;
 
 std::pair<ComplexMatrix, ComplexMatrix> runHPSS(ComplexMatrix& complexSpectrum,
                                                 Matrix<double>& powerSpectrum,
@@ -57,8 +59,8 @@ void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
   for (size_t i = 0; i < r; i++) {
     std::vector<double> rowData = powerSpectrum.getRow(i);
     auto first = rowData.begin();
-    auto last = rowData.begin() + MEDIAN_FILTER_SIZE;
-    for (size_t j = MEDIAN_OFFSET; j < c - MEDIAN_OFFSET; j++) {
+    auto last = rowData.begin() + HMEDIAN_FILTER_SIZE;
+    for (size_t j = HMEDIAN_OFFSET; j < c - HMEDIAN_OFFSET; j++) {
       std::vector<double> vec(first, last);
       yH(i, j) = median(vec);
       first++;
@@ -70,8 +72,8 @@ void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
   for (size_t i = 0; i < c; i++) {
     std::vector<double> colData = powerSpectrum.getCol(i);
     auto first = colData.begin();
-    auto last = colData.begin() + MEDIAN_FILTER_SIZE;
-    for (size_t j = MEDIAN_OFFSET; j < r - MEDIAN_OFFSET; j++) {
+    auto last = colData.begin() + PMEDIAN_FILTER_SIZE;
+    for (size_t j = PMEDIAN_OFFSET; j < r - PMEDIAN_OFFSET; j++) {
       std::vector<double> vec(first, last);
       yP(j, i) = median(vec);
       first++;

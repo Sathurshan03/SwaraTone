@@ -7,10 +7,13 @@
 
 #pragma once
 
+#include <cmath>
+
 #include "matrix.hpp"
 
 static const double epsilon = 0.0000001;
 static const double epsilonHalf = epsilon / 2.0;
+static const double softMaskExp = 0.75;
 
 /**
  * @brief Applies binary mask.
@@ -40,9 +43,11 @@ inline void binaryMask(const double yH, const double yP, double& mH,
  * @param[out] mP Soft mask for percussive component.
  */
 inline void softMask(const double yH, const double yP, double& mH, double& mP) {
-  double denominator = yH + yP + epsilon;
-  mH = (yH + epsilonHalf) / denominator;
-  mP = (yP + epsilonHalf) / denominator;
+  double denominator =
+      std::pow(yH, softMaskExp) + std::pow(yP, softMaskExp) + epsilon;
+
+  mH = (std::pow(yH, softMaskExp) + epsilonHalf) / denominator;
+  mP = (std::pow(yP, softMaskExp) + epsilonHalf) / denominator;
 }
 
 /**
