@@ -23,8 +23,8 @@ void runCore(std::string filePath) {
   // Determine size of spectrums. Input will include padding for smoothness.
   const size_t numFreqBins = getNyquistSize(WINDOW_SIZE);
   const size_t numWindows = (mp3Data.numSamples / HOP_SIZE) + 1;
-  const size_t r = numFreqBins;
-  const size_t c = numWindows;
+  const size_t r = numWindows;
+  const size_t c = numFreqBins;
 
   // Pad input.
   std::vector<double> input(mp3Data.numSamples + PADDING_SIZE * 2, 0.0);
@@ -42,8 +42,7 @@ void runCore(std::string filePath) {
   // Apply HPSS.
   Matrix<std::complex<double>> hComplexSpectrum{};
   Matrix<std::complex<double>> pComplexSpectrum{};
-  std::tie(hComplexSpectrum, pComplexSpectrum) =
-      runHPSS(complexSpectrum, powerSpectrum);
+  runHPSS(complexSpectrum, powerSpectrum, hComplexSpectrum, pComplexSpectrum);
 
   // Reconstruct signals.
   LOG_INFO("Reconstructing signals.");

@@ -177,6 +177,18 @@ class Matrix {
   }
 
   /**
+   * @brief Return a pointer to the start of row r.
+   *
+   * @param[in] r Row number.
+   * @return T* pointer to start of row content.
+   */
+  const T* getRowPtr(size_t r) const {
+    assert(r < rows);
+
+    return data.data() + r * cols;
+  }
+
+  /**
    * @brief Get a copy of the entire column.
    *
    * @param[in] c Column number.
@@ -189,6 +201,36 @@ class Matrix {
     for (size_t i = 0; i < rows; i++) colData[i] = data[i * cols + c];
 
     return colData;
+  }
+
+  /**
+   * @brief Set new values for an entire row.
+   *
+   * @param r Row number.
+   * @param vec New data.
+   */
+  void setRow(size_t r, std::vector<T> vec) {
+    if (vec.size() != cols) {
+      return;
+    }
+
+    std::copy(vec.begin(), vec.end(), data.begin() + r * cols);
+  }
+
+  /**
+   * @brief Set new values for an entire column.
+   *
+   * @param c Column number.
+   * @param vec New data.
+   */
+  void setCol(size_t c, std::vector<T> vec) {
+    if (vec.size() != rows) {
+      return;
+    }
+
+    for (size_t i = 0; i < rows; i++) {
+      data[i * cols + c] = vec[i];
+    }
   }
 
  private:

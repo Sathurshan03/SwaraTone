@@ -22,16 +22,17 @@ typedef std::complex<double> doubleComplex;
  * @param[in] nyquistApplied True if Nyquist Theorem was applied on @ref X.
  * False otherwise.
  */
-void runIFFT(std::vector<doubleComplex>& X, uint32_t N,
-             std::vector<doubleComplex>& x, bool nyquistApplied = true);
+void runIFFT(const doubleComplex* X, uint32_t N, std::vector<doubleComplex>& x,
+             bool nyquistApplied = true);
 
 /**
  * @brief Reverses Nyquist theorem by putting back frequencies that were removed
  * according to this theorem.
  *
  * @param[in] X Frequency domain where Nyquist theorem was applied.
+ * @param[in] Npos Size of frequency domain.
  * @param[out] fullFrequency Frequency domain where Nyquist theorem was
  * reversed.
  */
-void reverseNyquistTheorem(std::vector<doubleComplex>& X,
+void reverseNyquistTheorem(const doubleComplex* X, uint32_t Npos,
                            std::vector<doubleComplex>& fullFrequency);

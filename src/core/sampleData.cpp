@@ -45,7 +45,7 @@ void runSampleDataCore() {
 
   // Run IFFT of the generate frequency domain.
   std::vector<std::complex<double>> outputSignal;
-  runIFFT(X.frequency, N, outputSignal);
+  runIFFT(X.frequency.data(), X.frequency.size(), outputSignal);
 
   // Convert the output time domain signal into real number.
   std::vector<double> outputRealSignal(N);

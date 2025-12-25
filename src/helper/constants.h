@@ -12,14 +12,20 @@
 #include <math.h>
 
 #include <cstdint>
+#include <limits>
 
 // Constants
 const uint16_t BITS_PER_SAMPLE = 16U;
 
 const uint32_t BYTE_SIZE = 8U;
 
+const uint32_t BASE_NUM_THREADS = 5U;
+
+const double DOUBLE_EPS = std::numeric_limits<double>::epsilon();
+
 const uint32_t SAMPLE_RATE = 44100U;
 
+// Window constants.
 const uint32_t WINDOW_SIZE = 4096U;
 
 const uint32_t HALF_WINDOW_SIZE = WINDOW_SIZE / 2;

@@ -9,7 +9,7 @@
 
 void initFrequncyDomain(uint32_t windowSize, frequencyDomain& X) {
   X.numBins = (windowSize / 2) + 1;
-  X.frequency.resize(X.numBins);
+  X.frequency.reserve(windowSize);
 }
 
 void resizeFrequncyDomain(uint32_t newSize, frequencyDomain& X) {

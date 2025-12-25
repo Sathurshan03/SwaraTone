@@ -10,6 +10,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 option(BUILD_TESTS "ON to build tests job." OFF)
 option(ENABLE_LOGGING "ON to log messages." ON)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 add_subdirectory(src)
 
 if(BUILD_TESTS)

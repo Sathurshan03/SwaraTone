@@ -1,0 +1,36 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "MinGW_MakeFiles",
+      "displayName": "MinGW Makefiles",
+      "generator": "MinGW Makefiles",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "Ninja",
+      "displayName": "NINJA",
+      "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": {
+        "BUILD_TESTS": "ON"
+      }
+    }
+  ],
+
+  "buildPresets": [
+    {
+      "name": "build-MinGW_MakeFiles",
+      "configurePreset": "MinGW_MakeFiles",
+      "jobs": 8
+    },
+    {
+      "name": "build-NINJA",
+      "configurePreset": "Ninja",
+      "jobs": 8
+    }
+  ]
+}

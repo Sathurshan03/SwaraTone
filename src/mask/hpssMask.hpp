@@ -9,10 +9,11 @@
 
 #include <cmath>
 
+#include "constants.h"
 #include "matrix.hpp"
 
-static const double epsilon = 0.0000001;
-static const double epsilonHalf = epsilon / 2.0;
+static const double epsilon = DOUBLE_EPS * 2;
+static const double epsilonHalf = DOUBLE_EPS;
 static const double softMaskExp = 0.75;
 
 /**
@@ -77,3 +78,23 @@ void applyBinaryMask(const Matrix<double>& yH, const Matrix<double>& yP,
  */
 void applySoftMask(const Matrix<double>& yH, const Matrix<double>& yP,
                    Matrix<double>& mH, Matrix<double>& mP);
+
+/**
+ * @brief Applies a soft mask to separate harmonic and percussive components to
+ * subset of matrix.
+ *
+ * Computes continuous-valued masks that determine the relative contribution
+ * of harmonic and percussive components in each time–frequency bin.
+ *
+ * @param[in] yH Harmonic median estimates.
+ * @param[in] yP Percussive median estimates.
+ * @param[out] mH Soft mask for harmonic components.
+ * @param[out] mP Soft mask for percussive components.
+ * @param[in] start Starting index of matrix to apply soft mask. The index is
+ * following 1D representation of the matrix.
+ * @param[in] end Ending index (non-inclusive) of matrix to apply soft mask. The
+ * index is following 1D representation of the matrix.
+ */
+void applySoftMaskSubset(const Matrix<double>& yH, const Matrix<double>& yP,
+                         Matrix<double>& mH, Matrix<double>& mP, size_t start,
+                         size_t end);
