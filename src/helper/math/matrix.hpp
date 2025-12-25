@@ -123,6 +123,20 @@ class Matrix {
   }
 
   /**
+   * @brief Scale a matrix.
+   *
+   * @param scalar Scalar to multiply with matrix.
+   * @return Matrix<T>& Resultant matrix.
+   */
+  const Matrix<T>& scale(const T& scalar) {
+    for (T& val : data) {
+      val *= scalar;
+    }
+
+    return *this;
+  }
+
+  /**
    * @brief Returns the size of the matrix.
    *
    * @return std::pair<size_t, size_t> Pair where first item is number of rows
