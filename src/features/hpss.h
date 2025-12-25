@@ -36,3 +36,26 @@ void runHPSS(ComplexMatrix& complexSpectrum, Matrix<double>& powerSpectrum,
  */
 void runMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
                         Matrix<double>& yP);
+
+/**
+ * @brief Run median filtering on for harmonics.
+ *
+ * @param powerSpectrum Power spectrum.
+ * @param yH Median filter for harmonics.
+ * @param colStart The first column of the power spectrum to analyze.
+ * @param colEnd The last column (non-inclusive) of the power spectrum to
+ * analyze.
+ */
+void runHMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yH,
+                         size_t colStart, size_t colEnd);
+
+/**
+ * @brief Run median filtering on for percussions.
+ *
+ * @param powerSpectrum Power spectrum.
+ * @param yH Median filter for percussives.
+ * @param rowStart The first row of the power spectrum to analyze.
+ * @param rowEnd The last row (non-inclusive) of the power spectrum to analyze.
+ */
+void runPMedianFiltering(Matrix<double>& powerSpectrum, Matrix<double>& yP,
+                         size_t rowStart, size_t rowEnd);
