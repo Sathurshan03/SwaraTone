@@ -48,8 +48,13 @@ void runCore(std::string filePath) {
   LOG_INFO("Reconstructing signals.");
   std::vector<double> harmonics{};
   std::vector<double> percussive{};
+  std::vector<double> vocals{};
   reconstructSignal(hComplexSpectrum, harmonics);
   reconstructSignal(pComplexSpectrum, percussive);
+
+  Matrix<std::complex<double>> vComplexSpectrum =
+      hComplexSpectrum.scale(0.8) + pComplexSpectrum.scale(0.2);
+  reconstructSignal(vComplexSpectrum, vocals);
 
   // Save signals to audio file.
   LOG_INFO("Saving signals to audio");
@@ -58,5 +63,7 @@ void runCore(std::string filePath) {
                          mp3Data.sampleRate_hz);
   wavEncoder.writeToFile("percussive", percussive, BITS_PER_SAMPLE,
                          Channel::Mono, mp3Data.sampleRate_hz);
+  wavEncoder.writeToFile("vocals", vocals, BITS_PER_SAMPLE, Channel::Mono,
+                         mp3Data.sampleRate_hz);
   LOG_INFO("Done core logic");
 }
