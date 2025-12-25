@@ -24,4 +24,4 @@ jobs:
       run: cmake --build build --clean-first
 
     - name: Run Tests
-      run: cd build/test && ./SwaraToneTests
+      run: cd build/bin && ./SwaraToneTests
