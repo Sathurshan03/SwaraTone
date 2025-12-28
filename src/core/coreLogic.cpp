@@ -7,6 +7,8 @@
 
 #include "coreLogic.h"
 
+#include <filesystem>
+
 #include "constants.h"
 #include "fft_helper.hpp"
 #include "hpss.h"
@@ -59,11 +61,12 @@ void runCore(std::string filePath) {
   // Save signals to audio file.
   LOG_INFO("Saving signals to audio");
   WAVFileEncoder wavEncoder{};
-  wavEncoder.writeToFile("harmonics", harmonics, BITS_PER_SAMPLE, Channel::Mono,
-                         mp3Data.sampleRate_hz);
-  wavEncoder.writeToFile("percussive", percussive, BITS_PER_SAMPLE,
+  std::string fileSuffix = std::filesystem::path(filePath).filename().string();
+  wavEncoder.writeToFile("harmonics_" + fileSuffix, harmonics, BITS_PER_SAMPLE,
                          Channel::Mono, mp3Data.sampleRate_hz);
-  wavEncoder.writeToFile("vocals", vocals, BITS_PER_SAMPLE, Channel::Mono,
-                         mp3Data.sampleRate_hz);
+  wavEncoder.writeToFile("percussive_" + fileSuffix, percussive,
+                         BITS_PER_SAMPLE, Channel::Mono, mp3Data.sampleRate_hz);
+  wavEncoder.writeToFile("vocals_" + fileSuffix, vocals, BITS_PER_SAMPLE,
+                         Channel::Mono, mp3Data.sampleRate_hz);
   LOG_INFO("Done core logic");
 }

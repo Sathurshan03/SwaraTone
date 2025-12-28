@@ -5,14 +5,33 @@
  *******************************************************************************
  */
 
+#include "argParser.h"
 #include "coreLogic.h"
 #include "logging.h"
 #include "sampleData.h"
 
-int main() {
+int main(int argc, char* argv[]) {
   LOG_INFO("Hello! I am Swara Tone!");
   LOG_INFO("We will need a lot of coffee for this fun project!");
 
-  // runSampleDataCore();
-  runCore("sample.mp3");  // TODO: #20 implement arguments.
+  // Parse arguments.
+  Arguments arguments = parseArgumnets(argc, argv);
+  switch (arguments.action) {
+    case ParseAction::ExitFailure:
+      return 1;
+      break;
+
+    case ParseAction::ExitSuccess:
+      return 0;
+      break;
+
+    case ParseAction::Continue:
+    default:
+      break;
+  }
+
+  // Run main code.
+  runCore(arguments.filePath);
+
+  return 0;
 }
