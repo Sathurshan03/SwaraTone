@@ -2,6 +2,7 @@
 
 # Add subdirectories (each adds sources/includes).
 add_subdirectory(bit)
+add_subdirectory(filters)
 add_subdirectory(math)
 
 # Add source code to executable.

@@ -25,6 +25,8 @@ const double DOUBLE_EPS = std::numeric_limits<double>::epsilon();
 
 const uint32_t SAMPLE_RATE = 44100U;
 
+const double VOICE_CUTOFF_HZ = 100.0;
+
 // Window constants.
 const uint32_t WINDOW_SIZE = 4096U;
 
