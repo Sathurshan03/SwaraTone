@@ -11,6 +11,7 @@
 
 #include "constants.h"
 #include "fft_helper.hpp"
+#include "highPass.h"
 #include "hpss.h"
 #include "matrix.hpp"
 #include "mp3.h"
@@ -51,6 +52,7 @@ void runCore(std::string filePath) {
   std::vector<double> harmonics{};
   std::vector<double> percussive{};
   std::vector<double> vocals{};
+  std::vector<double> vocalsFiltered{};
   reconstructSignal(hComplexSpectrum, harmonics);
   reconstructSignal(pComplexSpectrum, percussive);
 
@@ -58,15 +60,18 @@ void runCore(std::string filePath) {
       hComplexSpectrum.scale(0.8) + pComplexSpectrum.scale(0.2);
   reconstructSignal(vComplexSpectrum, vocals);
 
+  digitalHighPass(vocals, vocalsFiltered, VOICE_CUTOFF_HZ,
+                  static_cast<double>(mp3Data.sampleRate_hz));
+
   // Save signals to audio file.
   LOG_INFO("Saving signals to audio");
   WAVFileEncoder wavEncoder{};
-  std::string fileSuffix = std::filesystem::path(filePath).filename().string();
+  std::string fileSuffix = std::filesystem::path(filePath).stem().string();
   wavEncoder.writeToFile("harmonics_" + fileSuffix, harmonics, BITS_PER_SAMPLE,
                          Channel::Mono, mp3Data.sampleRate_hz);
   wavEncoder.writeToFile("percussive_" + fileSuffix, percussive,
                          BITS_PER_SAMPLE, Channel::Mono, mp3Data.sampleRate_hz);
-  wavEncoder.writeToFile("vocals_" + fileSuffix, vocals, BITS_PER_SAMPLE,
-                         Channel::Mono, mp3Data.sampleRate_hz);
+  wavEncoder.writeToFile("vocals_" + fileSuffix, vocalsFiltered,
+                         BITS_PER_SAMPLE, Channel::Mono, mp3Data.sampleRate_hz);
   LOG_INFO("Done core logic");
 }
