@@ -3,11 +3,15 @@
 # Create and define executable.
 set(SourceExecutable "SwaraTone")
 set(SourceLib "SwaraToneLib")
+set(SourceVizLib "SwaraToneVizLib")
 
 add_executable(${SourceExecutable}
     main.cpp
 )
 add_library(${SourceLib} STATIC)
+
+find_package(Qt6 REQUIRED COMPONENTS Core Widgets Charts)
+target_link_libraries(${SourceExecutable} PUBLIC Qt6::Core Qt6::Widgets Qt6::Charts)
 
 # Include directories.
 target_include_directories(${SourceLib} PUBLIC
@@ -21,6 +25,8 @@ add_subdirectory(features)
 add_subdirectory(fft)
 add_subdirectory(helper)
 add_subdirectory(mask)
+add_subdirectory(viz)
 
 target_link_libraries(${SourceExecutable} PUBLIC ${SourceLib})
+target_link_libraries(${SourceExecutable} PUBLIC ${SourceVizLib})
 add_compile_definitions(ENABLE_LOGGING)
