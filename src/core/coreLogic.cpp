@@ -31,14 +31,12 @@ void runCore(std::string filePath) {
 
   // Pad input.
   std::vector<double> input(mp3Data.numSamples + PADDING_SIZE * 2, 0.0);
-  std::copy(mp3Data.channel1.begin(), mp3Data.channel1.end(),
-            input.begin() + PADDING_SIZE);
-
-  Matrix<std::complex<double>> complexSpectrum{r, c};
-  Matrix<double> powerSpectrum{r, c};
+  createInput(mp3Data, input);
 
   // Compute complex and power spectrum.
   LOG_INFO("Creating complex and power spectrum.");
+  Matrix<std::complex<double>> complexSpectrum{r, c};
+  Matrix<double> powerSpectrum{r, c};
   createComplexSpectrum(input, complexSpectrum);
   createPowerSpectrum(complexSpectrum, powerSpectrum);
 
@@ -74,4 +72,26 @@ void runCore(std::string filePath) {
   wavEncoder.writeToFile("vocals_" + fileSuffix, vocalsFiltered,
                          BITS_PER_SAMPLE, Channel::Mono, mp3Data.sampleRate_hz);
   LOG_INFO("Done core logic");
+}
+
+void createInput(const MP3Data& mp3Data, std::vector<double>& input) {
+  switch (mp3Data.channel) {
+    case Channel::Mono:
+      // Copy mono channel into input vector.
+      std::copy(mp3Data.channel1.begin(), mp3Data.channel1.end(),
+                input.begin() + PADDING_SIZE);
+      break;
+
+    case Channel::Stereo:
+      // Take average of both channel to create a mono channel.
+      for (size_t n = 0; n < mp3Data.numSamples; n++) {
+        input[PADDING_SIZE + n] =
+            (mp3Data.channel1[n] + mp3Data.channel2[n]) / 2.0;
+      }
+      break;
+
+    default:
+      LOG_ERROR("Channel type is not supported");
+      break;
+  }
 }
