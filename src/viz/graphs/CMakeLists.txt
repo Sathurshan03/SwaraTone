@@ -3,6 +3,7 @@
 # Add source code to executable.
 target_sources(${SourceVizLib} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/lineGraph.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/plot.cpp
 )
 
 # Include directories.

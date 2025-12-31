@@ -9,7 +9,6 @@
 
 #include "argParser.h"
 #include "coreLogic.h"
-#include "lineGraph.h"
 #include "logging.h"
 #include "sampleData.h"
 
