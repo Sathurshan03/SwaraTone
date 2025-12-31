@@ -5,6 +5,8 @@
  *******************************************************************************
  */
 
+#include <QtWidgets/QApplication>
+
 #include "argParser.h"
 #include "coreLogic.h"
 #include "logging.h"
@@ -13,6 +15,8 @@
 int main(int argc, char* argv[]) {
   LOG_INFO("Hello! I am Swara Tone!");
   LOG_INFO("We will need a lot of coffee for this fun project!");
+
+  QApplication app(argc, argv);
 
   // Parse arguments.
   Arguments arguments = parseArgumnets(argc, argv);
