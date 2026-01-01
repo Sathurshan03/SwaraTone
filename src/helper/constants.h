@@ -27,6 +27,10 @@ inline constexpr int IMG_PIXEL_WIDTH{1600};
 
 inline constexpr int IMG_PIXEL_HEIGHT{900};
 
+inline constexpr double MIN_HUMAN_HEARING_DB{-80.0};
+
+inline constexpr double MAX_HUMAN_HEARING_DB{0.0};
+
 inline constexpr uint32_t SAMPLE_RATE = 44100U;
 
 inline constexpr double VOICE_CUTOFF_HZ = 100.0;

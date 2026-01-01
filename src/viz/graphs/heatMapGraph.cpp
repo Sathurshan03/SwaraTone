@@ -5,13 +5,14 @@
  *******************************************************************************
  */
 
+#include "heatMapGraph.h"
+
 #include <QPainter>
 #include <QRect>
 #include <cassert>
 #include <cmath>
 
 #include "constants.h"
-#include "heatMapGraph.h"
 #include "plasmaColourMap.h"
 
 HeatMapGraph::HeatMapGraph(const Matrix<double>& data, double minVal,
@@ -51,7 +52,7 @@ void HeatMapGraph::fillHeatValues(const Matrix<double>& data) {
 
   for (size_t x = 0; x < data.getNumRows(); x++) {
     for (size_t y = 0; y < data.getNumCols(); y++) {
-      int idx = static_cast<int>((data(x, y) + minVal) * multiplier);
+      int idx = static_cast<int>((data(x, y) - minVal) * multiplier);
       idx = std::clamp(idx, 0, PLASMA_LUT_SIZE - 1);
       img.setPixel(x, imgSize.height() - y - 1, PLASMA_LUT[idx]);
     }
