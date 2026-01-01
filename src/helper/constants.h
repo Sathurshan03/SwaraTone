@@ -23,6 +23,10 @@ const uint32_t BASE_NUM_THREADS = 5U;
 
 const double DOUBLE_EPS = std::numeric_limits<double>::epsilon();
 
+const int IMG_PIXEL_WIDTH{1600};
+
+const int IMG_PIXEL_HEIGHT{900};
+
 const uint32_t SAMPLE_RATE = 44100U;
 
 const double VOICE_CUTOFF_HZ = 100.0;

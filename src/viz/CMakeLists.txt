@@ -20,3 +20,5 @@ add_subdirectory(graphs)
 target_include_directories(${SourceVizLib} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+target_link_libraries(${SourceVizLib} PUBLIC ${SourceHelperLib})
