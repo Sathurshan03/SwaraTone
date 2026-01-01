@@ -46,10 +46,10 @@ class HeatMapGraph {
   void fillHeatValues(const Matrix<double>& data);
 
   /** @brief Min value of heat map values. */
-  int minVal;
+  double minVal;
 
   /** @brief Max value of heat map values. */
-  int maxVal;
+  double maxVal;
 
   /** @brief Image holding heat map graph. */
   QImage img;

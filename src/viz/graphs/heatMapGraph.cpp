@@ -13,13 +13,13 @@
 #include <cassert>
 #include <cmath>
 
+#include "colourFunctions.h"
 #include "constants.h"
 #include "plasmaColourMap.h"
 
 HeatMapGraph::HeatMapGraph(const Matrix<double>& data, double minVal,
-                           double maxVal) {
-  this->minVal = static_cast<int>(std::floor(minVal));
-  this->maxVal = static_cast<int>(std::ceil(maxVal));
+                           double maxVal)
+    : minVal(minVal), maxVal(maxVal) {
   assert(this->minVal != this->maxVal);
 
   imgSize = QSize(data.getNumRows(), data.getNumCols());
@@ -37,7 +37,7 @@ void HeatMapGraph::rotateClockWise() {
 
 void HeatMapGraph::rotateCounterClockWise() {
   QTransform transform;
-  transform.rotate(90.0);
+  transform.rotate(-90.0);
   img = img.transformed(transform);
 }
 
@@ -46,28 +46,35 @@ void HeatMapGraph::saveFile(std::string fileName) {
   pixmap.fill(Qt::white);
   QPainter painter(&pixmap);
 
-  painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+  painter.setRenderHint(QPainter::LosslessImageRendering, true);
   QPoint topleft{0, 0};
   painter.drawImage(QRect(0, 0, imgSize.width(), imgSize.height()), img);
-
-  int scaleFactor = std::min(IMG_PIXEL_WIDTH / imgSize.width(),
-                             IMG_PIXEL_HEIGHT / imgSize.height());
-
-  imgSize *= scaleFactor;
-  img = img.scaled(imgSize);
 
   pixmap.save(QString::fromStdString(fileName + ".png"));
 }
 
 void HeatMapGraph::fillHeatValues(const Matrix<double>& data) {
-  int range = maxVal - minVal;
+  double range = maxVal - minVal;
   double multiplier = static_cast<double>(PLASMA_LUT_SIZE) / range;
+  const int maxIdx = PLASMA_LUT_SIZE - 1;
+  QRgb colour;
 
   for (size_t x = 0; x < data.getNumRows(); x++) {
     for (size_t y = 0; y < data.getNumCols(); y++) {
-      int idx = static_cast<int>((data(x, y) - minVal) * multiplier);
-      idx = std::clamp(idx, 0, PLASMA_LUT_SIZE - 1);
-      img.setPixel(x, imgSize.height() - y - 1, PLASMA_LUT[idx]);
+      double per = (data(x, y) - minVal) / range;
+      double fidx = per * maxIdx;
+
+      int idxColourA = static_cast<int>(std::floor(fidx));
+      int idxColourB = idxColourA + 1;
+
+      idxColourA = std::clamp(idxColourA, 0, maxIdx);
+      idxColourB = std::clamp(idxColourB, 0, maxIdx);
+      double alpha = fidx - idxColourA;
+
+      colour = linearInterpolateColour(PLASMA_LUT[idxColourA],
+                                       PLASMA_LUT[idxColourB], alpha);
+
+      img.setPixel(x, imgSize.height() - y - 1, colour);
     }
   }
 }
