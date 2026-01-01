@@ -11,7 +11,7 @@
 #include <iostream>
 #include <limits>
 
-#include "vizConstants.h"
+#include "constants.h"
 
 LineGraph::LineGraph() {
   chart = new QChart();

@@ -14,9 +14,12 @@ target_link_libraries(${SourceVizLib} PUBLIC
 )
 
 # Add subdirectories (each adds sources/includes).
+add_subdirectory(colours)
 add_subdirectory(graphs)
 
 # Include directories.
 target_include_directories(${SourceVizLib} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
+
+target_link_libraries(${SourceVizLib} PUBLIC ${SourceHelperLib})
