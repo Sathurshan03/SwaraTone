@@ -10,6 +10,7 @@
 #include <QImage>
 #include <string>
 
+#include "colourMaps.h"
 #include "matrix.hpp"
 
 /** @brief Class for handling heat map graphing using Qt. */
@@ -21,8 +22,10 @@ class HeatMapGraph {
    * @param[in] data Matrix data.
    * @param minVal Min value from @ref data.
    * @param maxVal Max value from @ref data.
+   * @param colourMap Colour map ID to use as the colour map.
    */
-  HeatMapGraph(const Matrix<double>& data, double minVal, double maxVal);
+  HeatMapGraph(const Matrix<double>& data, double minVal, double maxVal,
+               ColourMapID colourMapID = ColourMapID::MAGMA);
 
   /** @brief Rotates the graph image by 90 degrees clockwise.*/
   void rotateClockWise();
@@ -50,6 +53,9 @@ class HeatMapGraph {
 
   /** @brief Max value of heat map values. */
   double maxVal;
+
+  /** @brief Colour map to use on the graph. */
+  ColourMap colourMap;
 
   /** @brief Image holding heat map graph. */
   QImage img;

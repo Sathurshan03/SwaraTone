@@ -15,11 +15,12 @@
 
 #include "colourFunctions.h"
 #include "constants.h"
-#include "plasmaColourMap.h"
 
 HeatMapGraph::HeatMapGraph(const Matrix<double>& data, double minVal,
-                           double maxVal)
-    : minVal(minVal), maxVal(maxVal) {
+                           double maxVal, ColourMapID colourMapID)
+    : minVal(minVal),
+      maxVal(maxVal),
+      colourMap(COLOUR_MAPS[static_cast<size_t>(colourMapID)]) {
   assert(this->minVal != this->maxVal);
 
   imgSize = QSize(data.getNumRows(), data.getNumCols());
@@ -55,8 +56,8 @@ void HeatMapGraph::saveFile(std::string fileName) {
 
 void HeatMapGraph::fillHeatValues(const Matrix<double>& data) {
   double range = maxVal - minVal;
-  double multiplier = static_cast<double>(PLASMA_LUT_SIZE) / range;
-  const int maxIdx = PLASMA_LUT_SIZE - 1;
+  double multiplier = static_cast<double>(colourMap.size) / range;
+  const int maxIdx = colourMap.size - 1;
   QRgb colour;
 
   for (size_t x = 0; x < data.getNumRows(); x++) {
@@ -71,8 +72,8 @@ void HeatMapGraph::fillHeatValues(const Matrix<double>& data) {
       idxColourB = std::clamp(idxColourB, 0, maxIdx);
       double alpha = fidx - idxColourA;
 
-      colour = linearInterpolateColour(PLASMA_LUT[idxColourA],
-                                       PLASMA_LUT[idxColourB], alpha);
+      colour = linearInterpolateColour(colourMap.LUT[idxColourA],
+                                       colourMap.LUT[idxColourB], alpha);
 
       img.setPixel(x, imgSize.height() - y - 1, colour);
     }
