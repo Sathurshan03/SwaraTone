@@ -24,6 +24,12 @@ class HeatMapGraph {
    */
   HeatMapGraph(const Matrix<double>& data, double minVal, double maxVal);
 
+  /** @brief Rotates the graph image by 90 degrees clockwise.*/
+  void rotateClockWise();
+
+  /** @brief Rotates the graph image by 90 degrees counter clockwise.*/
+  void rotateCounterClockWise();
+
   /**
    * @brief Save the graph into a file.
    *

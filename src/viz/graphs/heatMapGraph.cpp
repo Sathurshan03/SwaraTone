@@ -9,6 +9,7 @@
 
 #include <QPainter>
 #include <QRect>
+#include <QTransform>
 #include <cassert>
 #include <cmath>
 
@@ -26,6 +27,18 @@ HeatMapGraph::HeatMapGraph(const Matrix<double>& data, double minVal,
   img.fill(Qt::white);
 
   fillHeatValues(data);
+}
+
+void HeatMapGraph::rotateClockWise() {
+  QTransform transform;
+  transform.rotate(90.0);
+  img = img.transformed(transform);
+}
+
+void HeatMapGraph::rotateCounterClockWise() {
+  QTransform transform;
+  transform.rotate(90.0);
+  img = img.transformed(transform);
 }
 
 void HeatMapGraph::saveFile(std::string fileName) {
