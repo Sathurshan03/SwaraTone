@@ -1,5 +1,8 @@
 # src/features CMakeLists.txt
 
+# Add subdirectories (each adds sources/includes).
+add_subdirectory(repet)
+
 # Add source code to executable.
 target_sources(${SourceLib} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/hpss.cpp
