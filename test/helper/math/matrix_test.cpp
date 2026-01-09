@@ -297,3 +297,63 @@ TEST(Matrix, ComplexMultiplication) {
     }
   }
 }
+
+/** @brief Verify an assertion is thrown when there is incorrect matrix
+ * dimension during division of two matrices. */
+TEST(Matrix, DivisionIncorrectDim) {
+  // Initialize 2 matrices with different dimensions.
+  Matrix<double> m1{5, 4};
+  Matrix<double> m2{4, 5};
+
+  std::string assertStr =
+      "Matrix elementwise division have incorrect dimensions.";
+
+  ASSERT_DEATH(m1 / m2, assertStr);
+  ASSERT_DEATH(m1 /= m2, assertStr);
+}
+
+/** @brief Verify that element wise division works correctly. */
+TEST(Matrix, ElementWiseDivision) {
+  // Initialize 2 matrices with data.
+  size_t r = 2;
+  size_t c = 3;
+  std::vector<double> data1{2.0, 12.0, 14.0, 4.0, 9.0, 24.0};
+  std::vector<double> data2{2.0, 6.0, 7.0, 2.0, 9.0, 6.0};
+  Matrix<double> m1{r, c, data1};
+  Matrix<double> m2{r, c, data2};
+
+  // Initialize expected matrix result.
+  std::vector<double> data3{1.0, 2.0, 2.0, 2.0, 1.0, 4.0};
+  Matrix<double> expected{r, c, data3};
+
+  // Apply division and assert that the result is near the expected matrix.
+  Matrix<double> result = m1 / m2;
+
+  for (size_t i = 0; i < r; i++) {
+    for (size_t j = 0; j < c; j++) {
+      ASSERT_NEAR(result(i, j), expected(i, j), PRECISION_ERROR);
+    }
+  }
+}
+
+/** @brief Verify that matrix transpose works correctly for a sample matrix.. */
+TEST(Matrix, Transpose) {
+  // Initialize 2 matrices with data.
+  size_t r = 3;
+  size_t c = 3;
+  std::vector<double> data1{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+  std::vector<double> data2{1.0, 4.0, 7.0, 2.0, 5.0, 8.0, 3.0, 6.0, 9.0};
+  Matrix<double> A{r, c, data1};
+  Matrix<double> expected{r, c, data2};
+
+  // Transpose the matrix and verify that the result is near the expected
+  // matrix.
+
+  Matrix<double> result = transpose(A);
+
+  for (size_t i = 0; i < r; i++) {
+    for (size_t j = 0; j < c; j++) {
+      ASSERT_NEAR(result(i, j), expected(i, j), PRECISION_ERROR);
+    }
+  }
+}

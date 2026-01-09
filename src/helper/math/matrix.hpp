@@ -123,6 +123,23 @@ class Matrix {
   }
 
   /**
+   * @brief Matrix element-wise division. A /= B
+   *
+   * @param b divisor matrix B.
+   * @return Matrix<T>& Result A.
+   */
+  template <typename U>
+  Matrix<T>& operator/=(const Matrix<U>& b) {
+    assert(this->size() == b.size() &&
+           "Matrix elementwise division have incorrect dimensions.");
+
+    for (size_t i = 0; i < data.size(); i++) {
+      data[i] /= b(i);
+    }
+    return *this;
+  }
+
+  /**
    * @brief Scale a matrix.
    *
    * @param scalar Scalar to multiply with matrix.
@@ -282,4 +299,35 @@ template <typename T, typename U>
 Matrix<T> operator*(Matrix<T> c, const Matrix<U>& b) {
   c *= b;
   return c;
+}
+
+/**
+ * @brief Matrix element-wise division. A = C / B
+ *
+ * @param c original matrix C.
+ * @param b divisor matrix B.
+ * @return Matrix<T>& Result A.
+ */
+template <typename T, typename U>
+Matrix<T> operator/(Matrix<T> c, const Matrix<U>& b) {
+  c /= b;
+  return c;
+}
+
+template <typename T>
+Matrix<T> transpose(const Matrix<T>& A) {
+  const size_t numRows = A.getNumRows();
+  const size_t numCols = A.getNumCols();
+  const size_t numElements = numRows * numCols;
+
+  std::vector<T> dataT(numElements);
+
+  for (int i = 0; i < numRows; ++i) {
+    for (int j = 0; j < numCols; ++j) {
+      dataT[j * numCols + i] = A(i * numRows + j);
+    }
+  }
+
+  Matrix<T> AT(numRows, numCols, dataT);
+  return AT;
 }
