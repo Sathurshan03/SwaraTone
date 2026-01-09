@@ -297,3 +297,25 @@ TEST(Matrix, ComplexMultiplication) {
     }
   }
 }
+
+/** @brief Verify that matrix transpose works correctly for a sample matrix.. */
+TEST(Matrix, Transpose) {
+  // Initialize 2 matrices with data.
+  size_t r = 3;
+  size_t c = 3;
+  std::vector<double> data1{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+  std::vector<double> data2{1.0, 4.0, 7.0, 2.0, 5.0, 8.0, 3.0, 6.0, 9.0};
+  Matrix<double> A{r, c, data1};
+  Matrix<double> expected{r, c, data2};
+
+  // Transpose the matrix and verify that the result is near the expected
+  // matrix.
+
+  Matrix<double> result = transpose(A);
+
+  for (size_t i = 0; i < r; i++) {
+    for (size_t j = 0; j < c; j++) {
+      ASSERT_NEAR(result(i, j), expected(i, j), PRECISION_ERROR);
+    }
+  }
+}
