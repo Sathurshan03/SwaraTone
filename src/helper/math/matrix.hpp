@@ -123,6 +123,23 @@ class Matrix {
   }
 
   /**
+   * @brief Matrix element-wise division. A /= B
+   *
+   * @param b divisor matrix B.
+   * @return Matrix<T>& Result A.
+   */
+  template <typename U>
+  Matrix<T>& operator/=(const Matrix<U>& b) {
+    assert(this->size() == b.size() &&
+           "Matrix elementwise division have incorrect dimensions.");
+
+    for (size_t i = 0; i < data.size(); i++) {
+      data[i] /= b(i);
+    }
+    return *this;
+  }
+
+  /**
    * @brief Scale a matrix.
    *
    * @param scalar Scalar to multiply with matrix.
@@ -281,6 +298,19 @@ Matrix<T> operator+(Matrix<T> c, const Matrix<U>& b) {
 template <typename T, typename U>
 Matrix<T> operator*(Matrix<T> c, const Matrix<U>& b) {
   c *= b;
+  return c;
+}
+
+/**
+ * @brief Matrix element-wise division. A = C / B
+ *
+ * @param c original matrix C.
+ * @param b divisor matrix B.
+ * @return Matrix<T>& Result A.
+ */
+template <typename T, typename U>
+Matrix<T> operator/(Matrix<T> c, const Matrix<U>& b) {
+  c /= b;
   return c;
 }
 
