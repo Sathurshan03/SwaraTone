@@ -40,12 +40,16 @@ T median(std::vector<T>& vec) {
  * @param vec Vector to serach max value.
  * @param startIdx The starting index to start search. (inclusive)
  * @param endIdx The index to end search. (exclusive)
- * @return size_t The index of the maximum value within the range.
+ * @return size_t The index of the maximum value within the range. Returns -1 if
+ * invalid input parameters.
  */
 template <typename T>
-size_t argmax(std::vector<T>& vec, size_t startIdx, size_t endIdx) {
-  assert(startIdx < vec.size());
-  assert(endIdx <= vec.size());
+size_t argmax(const std::vector<T>& vec, size_t startIdx, size_t endIdx) {
+  // Check input parameter validity.
+  if (startIdx > endIdx || startIdx >= vec.size() || endIdx > vec.size() ||
+      vec.size() == 0) {
+    return size_t(-1);
+  }
 
   T maxValue = vec[startIdx];
   size_t maxIdx = startIdx;

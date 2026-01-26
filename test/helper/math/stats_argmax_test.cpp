@@ -34,7 +34,10 @@ TEST_P(ArgmaxTest, ArgMax) {
 /** @brief Parametized options. */
 INSTANTIATE_TEST_SUITE_P(
     ArgMaxParams, ArgmaxTest,
-    ::testing::Values(ArgMaxParamType{{9, 3, 4, 10, 7}, 0, 1, 0},
+    ::testing::Values(ArgMaxParamType{{}, 1, 3, size_t(-1)},
+                      ArgMaxParamType{{9, 3, 4, 10, 7}, 4, 3, size_t(-1)},
+                      ArgMaxParamType{{9, 3, 4, 10, 7}, 3, 3, 3},
+                      ArgMaxParamType{{9, 3, 4, 10, 7}, 0, 1, 0},
                       ArgMaxParamType{{9, 3, 4, 10, 7}, 0, 5, 3},
                       ArgMaxParamType{{9, 3, 4, 10, 7}, 4, 5, 4},
                       ArgMaxParamType{{9, 3, 4, 10, 7}, 1, 3, 2}));
