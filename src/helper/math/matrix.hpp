@@ -192,6 +192,13 @@ class Matrix {
   inline size_t getNumCols() const { return cols; }
 
   /**
+   * @brief Get the number of elements in the matrix.
+   *
+   * @return size_t The number of elements.
+   */
+  inline size_t getNumElements() const { return rows * cols; }
+
+  /**
    * @brief Get a copy of the entire row.
    *
    * @param[in] r Row number.
