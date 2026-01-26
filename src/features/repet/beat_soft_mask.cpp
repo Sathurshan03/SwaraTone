@@ -7,20 +7,24 @@
 
 #include "beat_soft_mask.h"
 
+#include <algorithm>
+
 Matrix<std::complex<double>> applySoftMask(
-    const Matrix<double>& W, const Matrix<double>& V,
+    const Matrix<double>& repeatWeight, const Matrix<double>& totalEnergyMatrix,
     const Matrix<std::complex<double>>& X) {
   // Crease soft mask.
-  Matrix<double> M(W.getNumRows(), W.getNumCols());
-  Matrix<std::complex<double>> maskedX(W.getNumRows(), W.getNumCols());
-  M = W / V;
+  Matrix<double> maskMatrix(repeatWeight.getNumRows(),
+                            repeatWeight.getNumCols());
+  Matrix<std::complex<double>> maskedX(repeatWeight.getNumRows(),
+                                       repeatWeight.getNumCols());
 
-  // Symmetrize M.
-  M = (M + transpose(M));
-  M.scale(0.5);
+  for (size_t i = 0; i < maskMatrix.getNumElements(); i++) {
+    maskMatrix(i) =
+        std::clamp(repeatWeight(i) / totalEnergyMatrix(i), 0.0, 1.0);
+  }
 
   // Apply M onto STFT X.
-  maskedX = X * M;
+  maskedX = X * maskMatrix;
 
   return maskedX;
 }

@@ -6,37 +6,40 @@
  */
 
 #include "beat_spectrum.h"
+
 #include "constants.h"
 
 std::vector<double> createBeatSpectrum(const Matrix<double>& powerSpectrum) {
   size_t numTimeFrames = powerSpectrum.getNumRows();
   size_t numFreq = powerSpectrum.getNumCols();
 
-  std::vector<double> b(numTimeFrames);
+  std::vector<double> beatSpectrum(numTimeFrames);
 
   // Create condensed beat spectrum.
-  for (size_t j = 0; j < numTimeFrames; j++) {
-    for (size_t i = 0; i < numFreq; i++) {
-      double corr = 0.0;
+  for (size_t lag = 0; lag < numTimeFrames; lag++) {
+    for (size_t freqBin = 0; freqBin < numFreq; freqBin++) {
+      double lagCorrelation = 0.0;
 
       // Compute the beat spectrum correlation.
-      for (size_t k = 0; k < numTimeFrames - j; k++) {
-        corr += powerSpectrum(k, i) * powerSpectrum(k + j, i);
+      for (size_t timeIndex = 0; timeIndex < numTimeFrames - lag; timeIndex++) {
+        lagCorrelation += powerSpectrum(timeIndex, freqBin) *
+                          powerSpectrum(timeIndex + lag, freqBin);
       }
 
-      corr /= (numTimeFrames - j);
-      b[j] += corr;
+      lagCorrelation /= (numTimeFrames - lag);
+      beatSpectrum[lag] += lagCorrelation;
     }
 
-    b[j] /= numFreq;
+    beatSpectrum[lag] /= numFreq;
   }
 
   // Normalize beat spectrum.
-  if (std::abs(b[0]) > DOUBLE_EPS) {
-    for (double& i : b) {
-      i /= b[0];
+  if (std::abs(beatSpectrum[0]) > DOUBLE_EPS) {
+    double normalizationFactor = std::abs(beatSpectrum[0]) + 1e-12;
+    for (double& value : beatSpectrum) {
+      value /= normalizationFactor;
     }
   }
 
-  return b;
+  return beatSpectrum;
 }
