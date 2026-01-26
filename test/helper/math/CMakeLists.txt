@@ -3,6 +3,7 @@
 # Define test executable files.
 target_sources(${TestExecutable} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/matrix_test.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/stats_argmax_test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/stats_median_test.cpp
 )
 
