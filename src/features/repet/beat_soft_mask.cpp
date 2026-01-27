@@ -10,16 +10,38 @@
 #include <algorithm>
 
 #include "constants.h"
+#include "stats.h"
 
 Matrix<std::complex<double>> applySoftMask(
-    const Matrix<double>& repeatingSegment,
     const Matrix<double>& magnitudeSpectrogram,
     const Matrix<std::complex<double>>& X, size_t period) {
   size_t numFreqBins = magnitudeSpectrogram.getNumRows();
   size_t numTimeFrames = magnitudeSpectrogram.getNumCols();
   size_t numElements = magnitudeSpectrogram.getNumElements();
 
-  // Create repeating weight matix.
+  assert(period < numTimeFrames);
+
+  // Create repeating segment matrix (S).
+  Matrix<double> repeatingSegment(numFreqBins, period);
+  std::vector<double> periodMagnitudes;
+  periodMagnitudes.reserve(numTimeFrames / period + 1);
+
+  for (size_t freq = 0; freq < numFreqBins; freq++) {
+    for (size_t periodOffset = 0; periodOffset < period; periodOffset++) {
+      size_t numPeriodFrames =
+          (numTimeFrames - periodOffset + period - 1) / period;
+      periodMagnitudes.clear();
+      periodMagnitudes.resize(numPeriodFrames);
+
+      for (size_t i = 0; i < numPeriodFrames; i++) {
+        periodMagnitudes.push_back(
+            magnitudeSpectrogram(freq, periodOffset + i * period));
+      }
+      repeatingSegment(freq, periodOffset) = median(periodMagnitudes);
+    }
+  }
+
+  // Create repeating weight matix (W).
   Matrix<double> repeatWeight(numFreqBins, numTimeFrames);
 
   std::vector<double> runningMin(
@@ -34,7 +56,7 @@ Matrix<std::complex<double>> applySoftMask(
     }
   }
 
-  // Create soft mask.
+  // Create soft mask (M).
   Matrix<double> maskMatrix(numFreqBins, numTimeFrames);
   Matrix<std::complex<double>> maskedX(numFreqBins, numTimeFrames);
 
