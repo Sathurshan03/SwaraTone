@@ -23,6 +23,8 @@ inline constexpr uint32_t BASE_NUM_THREADS = 5U;
 
 inline constexpr double DOUBLE_EPS = std::numeric_limits<double>::epsilon();
 
+inline constexpr double MAX_DOUBLE = std::numeric_limits<double>::max();
+
 inline constexpr int IMG_PIXEL_WIDTH{1600};
 
 inline constexpr int IMG_PIXEL_HEIGHT{900};
