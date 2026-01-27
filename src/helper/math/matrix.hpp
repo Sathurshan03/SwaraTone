@@ -331,7 +331,7 @@ Matrix<T> transpose(const Matrix<T>& A) {
 
   for (int i = 0; i < numRows; ++i) {
     for (int j = 0; j < numCols; ++j) {
-      dataT[j * numCols + i] = A(i * numRows + j);
+      dataT[j * numRows + i] = A(i * numCols + j);
     }
   }
 

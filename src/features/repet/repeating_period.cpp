@@ -17,7 +17,7 @@
 
 const double SEARCH_RADIUS_FACTOR = 0.05;
 
-int findRepeatingPeriod(std::vector<double>& beatSpectrum) {
+int findRepeatingPeriod(const std::vector<double>& beatSpectrum) {
   size_t totalPeriods = beatSpectrum.size();
   size_t analysisLength = beatSpectrum.size() * 3 / 4;
   size_t maxPeriod = analysisLength / 3;

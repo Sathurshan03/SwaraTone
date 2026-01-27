@@ -14,11 +14,11 @@
 /**
  * @brief Applies soft mask onto STFT X
  *
- * @param magnitudeSpectrogram Full magnitude spectrum. (V)
- * @param X Original complex STFT. (X)
- * @param period The determined period of the beat spectrum.
- * @return Matrix<std::complex<double>> soft mask on X.
+ * @param[in] magnitudeSpectrogram Full magnitude spectrum. (V)
+ * @param[in] X Original complex STFT. (X)
+ * @param[in] period The determined period of the beat spectrum.
+ * @param[out] maskedX soft mask on X.
  */
-Matrix<std::complex<double>> applySoftMask(
-    const Matrix<double>& magnitudeSpectrogram,
-    const Matrix<std::complex<double>>& X, size_t period);
+void applySoftMask(const Matrix<double>& magnitudeSpectrogram,
+                   const Matrix<std::complex<double>>& X, size_t period,
+                   Matrix<std::complex<double>>& maskedX);

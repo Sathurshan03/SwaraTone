@@ -12,11 +12,11 @@
 #include "constants.h"
 #include "stats.h"
 
-Matrix<std::complex<double>> applySoftMask(
-    const Matrix<double>& magnitudeSpectrogram,
-    const Matrix<std::complex<double>>& X, size_t period) {
-  size_t numFreqBins = magnitudeSpectrogram.getNumRows();
-  size_t numTimeFrames = magnitudeSpectrogram.getNumCols();
+void applySoftMask(const Matrix<double>& magnitudeSpectrogram,
+                   const Matrix<std::complex<double>>& X, size_t period,
+                   Matrix<std::complex<double>>& maskedX) {
+  size_t numTimeFrames = magnitudeSpectrogram.getNumRows();
+  size_t numFreqBins = magnitudeSpectrogram.getNumCols();
   size_t numElements = magnitudeSpectrogram.getNumElements();
 
   assert(period < numTimeFrames);
@@ -35,14 +35,14 @@ Matrix<std::complex<double>> applySoftMask(
 
       for (size_t i = 0; i < numPeriodFrames; i++) {
         periodMagnitudes.push_back(
-            magnitudeSpectrogram(freq, periodOffset + i * period));
+            magnitudeSpectrogram(periodOffset + i * period, freq));
       }
-      repeatingSegment(freq, periodOffset) = median(periodMagnitudes);
+      repeatingSegment(periodOffset, freq) = median(periodMagnitudes);
     }
   }
 
   // Create repeating weight matix (W).
-  Matrix<double> repeatWeight(numFreqBins, numTimeFrames);
+  Matrix<double> repeatWeight(numTimeFrames, numFreqBins);
 
   std::vector<double> runningMin(
       period, MAX_DOUBLE);  // Track min magnitude per period offset.
@@ -50,15 +50,15 @@ Matrix<std::complex<double>> applySoftMask(
     for (int frame = static_cast<int>(numTimeFrames) - 1; frame >= 0; frame--) {
       size_t offset = frame % period;
       runningMin[offset] =
-          std::min(runningMin[offset], magnitudeSpectrogram(freq, frame));
-      repeatWeight(freq, frame) =
-          std::min(repeatingSegment(freq, offset), runningMin[offset]);
+          std::min(runningMin[offset], magnitudeSpectrogram(frame, freq));
+      repeatWeight(frame, freq) =
+          std::min(repeatingSegment(offset, freq), runningMin[offset]);
     }
   }
 
   // Create soft mask (M).
-  Matrix<double> maskMatrix(numFreqBins, numTimeFrames);
-  Matrix<std::complex<double>> maskedX(numFreqBins, numTimeFrames);
+  Matrix<double> maskMatrix(numTimeFrames, numFreqBins);
+  maskedX.resize(maskMatrix.size());
 
   for (size_t i = 0; i < numElements; i++) {
     if (magnitudeSpectrogram(i) > DOUBLE_EPS) {
@@ -69,6 +69,4 @@ Matrix<std::complex<double>> applySoftMask(
 
   // Apply M onto STFT X.
   maskedX = X * maskMatrix;
-
-  return maskedX;
 }
