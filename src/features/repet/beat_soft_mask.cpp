@@ -22,7 +22,7 @@ void applySoftMask(const Matrix<double>& magnitudeSpectrogram,
   assert(period < numTimeFrames);
 
   // Create repeating segment matrix (S).
-  Matrix<double> repeatingSegment(numFreqBins, period);
+  Matrix<double> repeatingSegment(period, numFreqBins);
   std::vector<double> periodMagnitudes;
   periodMagnitudes.reserve(numTimeFrames / period + 1);
 
@@ -34,8 +34,8 @@ void applySoftMask(const Matrix<double>& magnitudeSpectrogram,
       periodMagnitudes.resize(numPeriodFrames);
 
       for (size_t i = 0; i < numPeriodFrames; i++) {
-        periodMagnitudes.push_back(
-            magnitudeSpectrogram(periodOffset + i * period, freq));
+        periodMagnitudes[i] =
+            magnitudeSpectrogram(periodOffset + i * period, freq);
       }
       repeatingSegment(periodOffset, freq) = median(periodMagnitudes);
     }
@@ -44,15 +44,11 @@ void applySoftMask(const Matrix<double>& magnitudeSpectrogram,
   // Create repeating weight matix (W).
   Matrix<double> repeatWeight(numTimeFrames, numFreqBins);
 
-  std::vector<double> runningMin(
-      period, MAX_DOUBLE);  // Track min magnitude per period offset.
   for (size_t freq = 0; freq < numFreqBins; freq++) {
     for (int frame = static_cast<int>(numTimeFrames) - 1; frame >= 0; frame--) {
       size_t offset = frame % period;
-      runningMin[offset] =
-          std::min(runningMin[offset], magnitudeSpectrogram(frame, freq));
-      repeatWeight(frame, freq) =
-          std::min(repeatingSegment(offset, freq), runningMin[offset]);
+      repeatWeight(frame, freq) = std::min(repeatingSegment(offset, freq),
+                                           magnitudeSpectrogram(frame, freq));
     }
   }
 

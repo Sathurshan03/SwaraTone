@@ -15,6 +15,8 @@
 #include "hpss.h"
 #include "matrix.hpp"
 #include "mp3.h"
+#include "plot.h"
+#include "repet.h"
 #include "signalReconstruction.h"
 #include "spectrum.h"
 #include "wav_encoding.h"
@@ -37,8 +39,16 @@ void runCore(std::string filePath) {
   LOG_INFO("Creating complex and power spectrum.");
   Matrix<std::complex<double>> complexSpectrum{r, c};
   Matrix<double> powerSpectrum{r, c};
+  Matrix<double> magnitudeSpectrum{r, c};
   createComplexSpectrum(input, complexSpectrum);
+
+  // TODO: we can combine the following into the same function.
   createPowerSpectrum(complexSpectrum, powerSpectrum);
+  createMagnitudeSpectrum(complexSpectrum, magnitudeSpectrum);
+
+  // Apply REPET.
+  Matrix<std::complex<double>> maskedX =
+      runRepet(magnitudeSpectrum, powerSpectrum, complexSpectrum);
 
   // Apply HPSS.
   Matrix<std::complex<double>> hComplexSpectrum{};
