@@ -12,7 +12,7 @@
 /**
  * @brief Find the best period from the beat spectrum.
  *
- * @param beatSpectrum Compressed beat spectrum.
+ * @param[in] beatSpectrum Compressed beat spectrum.
  * @return int The best period from the beat spectrum.
  */
-int findRepeatingPeriod(std::vector<double>& beatSpectrum);
+int findRepeatingPeriod(const std::vector<double>& beatSpectrum);

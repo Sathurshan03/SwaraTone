@@ -5,6 +5,7 @@ target_sources(${SourceLib} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/beat_soft_mask.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/beat_spectrum.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/repeating_period.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/repet.cpp
 )
 
 # Include directories.

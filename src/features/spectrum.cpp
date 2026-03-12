@@ -72,3 +72,14 @@ void createPowerSpectrum(const Matrix<std::complex<double>>& complexSpectrum,
     powerSpectrum(i) = std::norm(complexSpectrum(i));
   }
 }
+
+void createMagnitudeSpectrum(
+    const Matrix<std::complex<double>>& complexSpectrum,
+    Matrix<double>& magnitudeSpectrum) {
+  const size_t numOps =
+      magnitudeSpectrum.getNumRows() * magnitudeSpectrum.getNumCols();
+
+  for (size_t i = 0; i < numOps; i++) {
+    magnitudeSpectrum(i) = std::abs(complexSpectrum(i));
+  }
+}

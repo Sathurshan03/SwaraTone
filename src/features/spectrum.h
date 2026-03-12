@@ -41,3 +41,13 @@ void createComplexSpectrumCols(std::vector<double>& in,
  */
 void createPowerSpectrum(const Matrix<std::complex<double>>& complexSpectrum,
                          Matrix<double>& powerSpectrum);
+
+/**
+ * @brief Create a magnitude spectrum from the complex spectrum.
+ *
+ * @param[in] complexSpectrum Complex spectrum.
+ * @param[out] magnitudeSpectrum Magnitude spectrum
+ */
+void createMagnitudeSpectrum(
+    const Matrix<std::complex<double>>& complexSpectrum,
+    Matrix<double>& magnitudeSpectrum);
